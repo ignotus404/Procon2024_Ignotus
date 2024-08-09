@@ -1,0 +1,15 @@
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\bin\Debug\net8.0\2024ProconTemporary.exe
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\bin\Debug\net8.0\2024ProconTemporary.deps.json
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\bin\Debug\net8.0\2024ProconTemporary.runtimeconfig.json
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\bin\Debug\net8.0\2024ProconTemporary.dll
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\bin\Debug\net8.0\2024ProconTemporary.pdb
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\obj\Debug\net8.0\2024ProconTemporary.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\obj\Debug\net8.0\2024ProconTemporary.AssemblyInfoInputs.cache
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\obj\Debug\net8.0\2024ProconTemporary.AssemblyInfo.cs
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\obj\Debug\net8.0\2024ProconTemporary.csproj.CoreCompileInputs.cache
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\obj\Debug\net8.0\2024ProconTemporary.sourcelink.json
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\obj\Debug\net8.0\2024ProconTemporary.dll
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\obj\Debug\net8.0\refint\2024ProconTemporary.dll
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\obj\Debug\net8.0\2024ProconTemporary.pdb
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\obj\Debug\net8.0\2024ProconTemporary.genruntimeconfig.cache
+C:\Users\suzuk\Downloads\2024ProconTemporary\2024ProconTemporary\obj\Debug\net8.0\ref\2024ProconTemporary.dll
