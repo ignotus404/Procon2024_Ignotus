@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("2024ProconTemporary")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d880f511fdc75a876e14cf49b361b75708b4a35a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5ccd89cc6881687c9ae3465b38f1aa3cfc82c71e")]
 [assembly: System.Reflection.AssemblyProductAttribute("2024ProconTemporary")]
 [assembly: System.Reflection.AssemblyTitleAttribute("2024ProconTemporary")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

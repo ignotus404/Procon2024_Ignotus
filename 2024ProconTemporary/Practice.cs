@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace _2024ProconTemporary
 {
     //Test
+    //
     public class Practice
     {
         public static int pieceX;
