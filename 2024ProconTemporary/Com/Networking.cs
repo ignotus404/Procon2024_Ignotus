@@ -1,19 +1,24 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using DotNetEnv;
 
 namespace _2024ProconTemporary.Com;
 
 public static class Networking
 {
-    private static readonly string ServerIp = Environment.GetEnvironmentVariable("SERVER_IP") ?? "127.0.0.1";
+    private static readonly string ServerIp = Env.GetString("SERVER_IP", "127.0.0.1");
 
-    private static readonly string Token = Environment.GetEnvironmentVariable("PROCON_TOKEN") ??
-                                           throw new InvalidOperationException("Not specified token");
+    private static readonly string Token = Env.GetString("PROCON_TOKEN");
 
     private static readonly string AnswerEndPoint = $"http://{ServerIp}/answer";
     private static readonly string ProblemEndPoint = $"http://{ServerIp}/problem";
 
+    static Networking()
+    {
+        Env.Load();
+    }
+    
     public static HttpClient CreateClient()
     {
         return new HttpClient();

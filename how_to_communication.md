@@ -4,12 +4,13 @@ How to 競技鯖との通信
 Author: ms0503
 
 # 最初にやるべきこと
-`2024ProconTemporary`内に`.env`ファイルを作り、
+ビルド後成果物が入っている場所(`2024ProconTemporary/bin/Debug/net8.0/`など)に`.env`ファイルを作り、
 ```env
 PROCON_TOKEN=<トークン>
 SERVER_IP=<競技鯖のIP>
 ```
-を書いておきます。
+を書いておきます。  
+(もしくはプロジェクト内(`2024ProconTemporary/`など)に`.env`を作成しプロパティで出力ディレクトリにコピーさせるようにして上記内容を記述する)
 
 次に通信に使用するクライアントを作成しておきます。
 ```cs
