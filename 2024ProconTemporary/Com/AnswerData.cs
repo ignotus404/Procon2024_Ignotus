@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace _2024ProconTemporary.Com;
 
-public abstract class AnswerData
+public class AnswerData
 {
     [JsonPropertyName("n")] public required int N { get; set; }
 
@@ -25,5 +25,17 @@ public abstract class AnswerData
         [JsonPropertyName("y")] public required int Y { get; set; }
 
         [JsonPropertyName("s")] public required Side S { get; set; }
+    }
+}
+
+public static class Answer
+{
+    public static AnswerData Create()
+    {
+        return new AnswerData
+        {
+            N = 0,
+            Ops = new List<AnswerData.OperationData>()
+        };
     }
 }

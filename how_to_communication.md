@@ -20,6 +20,9 @@ var client = Networking.CreateClient();
 
 # 問題データの取得
 問題データは元のJSON形式に則った形でアクセスできるようになっています。(`_2024ProconTemporary.Com.ProblemData`を参照)
+
+作成したクライアントを渡すと問題データが返ってきます。  
+sync版・async版両方あるのでお好みでどうぞ。
 ```cs
 // sync版
 var problem = Networking.GetProblemData(client);
@@ -28,8 +31,15 @@ var problem = Networking.GetProblemData(client);
 var problem = await Networking.GetProblemDataAsync(client);
 ```
 
-# 回答データの送信
+# 回答データの作成
 回答データは元のJSON形式に則った形で作成できるようになっています。(`_2024ProconTemporary.Com.AnswerData`を参照)
+```cs
+var answer = Answer.Create();
+```
+
+# 回答データの送信
+作成したクライアントと回答データを渡すと送信できます。  
+sync版・async版両方あるのでお好みでどうぞ。
 ```cs
 // sync版
 Networking.SendAnswerData(client, answer);
