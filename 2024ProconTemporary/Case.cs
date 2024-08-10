@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using _2024ProconTemporary.Util;
 
 namespace _2024ProconTemporary
 {
@@ -35,7 +36,7 @@ namespace _2024ProconTemporary
                 {
                     for (int x = Type.GetLength(0) - 1; x >= 0; x--)
                     {
-                        if (Type[x, y] == 1)
+                        if (MathHelper.Approximately(Type[x, y], 1.0f))
                         {
                             if (x + PointX < Ques.Count)
                             {
@@ -66,7 +67,7 @@ namespace _2024ProconTemporary
                 {
                     for (int x = Type.GetLength(0) - 1; x >= 0; x--)
                     {
-                        if (Type[x, y] == 1)
+                        if (MathHelper.Approximately(Type[x, y], 1.0f))
                         {
                             if (x + PointX < Ques.Count)
                             {
@@ -98,7 +99,7 @@ namespace _2024ProconTemporary
                 {
                     for (int x = Type.GetLength(1) - 1; x >= 0; x--)
                     {
-                        if (Type[y, x] == 1)
+                        if (MathHelper.Approximately(Type[x, y], 1.0f))
                         {
                             if (x + PointX < Ques[0].Count)
                             {
@@ -128,7 +129,7 @@ namespace _2024ProconTemporary
                 {
                     for (int x = Type.GetLength(1) - 1; x >= 0; x--)
                     {
-                        if (Type[y, x] == 1)
+                        if (MathHelper.Approximately(Type[x, y], 1.0f))
                         {
                             if (x + PointX < Ques[0].Count)
                             {
