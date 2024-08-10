@@ -140,7 +140,7 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
 
 # Thumbnails
 ._*
@@ -560,4 +560,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+.env
 .gitignore~
