@@ -1,0 +1,7 @@
+Global/Backup
+Global/JetBrains
+Global/Linux
+Global/VisualStudioCode
+Global/Windows
+Global/macOS
+VisualStudio

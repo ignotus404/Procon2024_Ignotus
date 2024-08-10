@@ -1,0 +1,7 @@
+*.sh			text eol=lf
+.gitattributes		text eol=lf
+.gitignore		text eol=lf
+gitignore_list.txt	text eol=lf
+gitignore_local.txt	text eol=lf
+
+# vim: noexpandtab ts=8
