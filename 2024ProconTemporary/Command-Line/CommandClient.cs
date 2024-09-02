@@ -1,5 +1,5 @@
 using EntryPoint;
-using _2024ProconTemporary.Base.Commands;
+using _2024ProconTemporary.CommandLine.Commands;
 
 
 namespace _2024ProconTemporary.Base

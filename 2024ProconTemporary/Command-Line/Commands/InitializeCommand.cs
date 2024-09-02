@@ -1,7 +1,7 @@
 using System;
 using EntryPoint;
 
-namespace _2024ProconTemporary.Base.Commands
+namespace _2024ProconTemporary.CommandLine.Commands
 {
     public class InitializeCommandClient : BaseCliArguments
     {

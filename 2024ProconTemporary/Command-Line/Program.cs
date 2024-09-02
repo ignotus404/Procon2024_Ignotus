@@ -1,6 +1,6 @@
 using EntryPoint;
 using System;
-using _2024ProconTemporary.Base.Commands;
+using _2024ProconTemporary.CommandLine.Commands;
 using _2024ProconTemporary.Base;
 
 class Program
