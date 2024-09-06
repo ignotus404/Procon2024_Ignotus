@@ -12,53 +12,53 @@ namespace _2024ProconTemporary
     {
         public static int pieceX;
         public static int pieceY;
-        Random random = new Random();
-        public static List<List<int>> answer = new List<List<int>>();
-        public static List<List<int>> queues = new List<List<int>>();
+        Random Random = new Random();
+        public static List<List<int>> Anser = new List<List<int>>();
+        public static List<List<int>> Ques = new List<List<int>>();
         public void Awake()
         {
             Question();
-            Answer(answer);
+            Answer(Anser);
         }
 
         public void Question()
         {
             for (int y = 0; y < pieceY; y++)
             {
-                List<int> ansOne = new List<int>();
+                List<int> Ansone = new List<int>();
                 for (int x = 0; x < pieceX; x++)
                 {
-                    ansOne.Add(random.Next(0, 4));
+                    Ansone.Add(Random.Next(0, 4));
                 }
-                answer.Add(ansOne);
+                Anser.Add(Ansone);
 
             }
 
 
         }
-        public void Answer(List<List<int>> ans)
+        public void Answer(List<List<int>> Ans)
         {
 
             Random rand = new Random();
-            List<List<int>> ansChange = new List<List<int>>();
-            List<int> shuffle = new List<int>();
+            List<List<int>> AnsChange = new List<List<int>>();
+            List<int> shufle = new List<int>();
             int j = 0;
             for (int y = 0; y < pieceY; y++)
             {
                 for (int x = 0; x < pieceX; x++)
                 {
-                    shuffle.Add(ans[y][x]);
+                    shufle.Add(Ans[y][x]);
                 }
             }
-            List<int> result = shuffle.OrderBy(x => rand.Next()).ToList();
+            List<int> result = shufle.OrderBy(x => rand.Next()).ToList();
             for (int y = 0; y < pieceY; y++)
             {
-                List<int> queuesOne = new List<int>();
+                List<int> Quesone = new List<int>();
                 for (int x = 0; x < pieceX; x++, j++)
                 {
-                    queuesOne.Add(result[j]);
+                    Quesone.Add(result[j]);
                 }
-                queues.Add(queuesOne);
+                Ques.Add(Quesone);
             }
         }
     }

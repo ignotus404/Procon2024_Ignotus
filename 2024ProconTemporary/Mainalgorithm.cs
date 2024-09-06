@@ -3,31 +3,35 @@
 namespace _2024ProconTemporary
 {
 
-    public class MainAlgorithm
+    public class Mainalgorithm
     {
+
+
+
+
         Case cases = new Case();
         Practice practice = new Practice();
-        Pattern _pattern = new Pattern();
+        Type Type = new Type();
         List<List<int>> MatchInfo = new List<List<int>>();
         List<List<int>> MatchInfos = new List<List<int>>();
-        delegate List<List<int>> DieCutting(List<List<int>> queues, float[,] pattern, int pointX, int pointY);
+        delegate List<List<int>> DieCutting(List<List<int>> Ques, float[,] Type, int PointX, int PointY);
         static void Main()
         {
             
             
-            MatchCalculate();
+            Matchcalculate();
         }
 
-        static void MatchCalculate()
+        static void Matchcalculate()
         {
 
             Case cases = new Case();
-            List<List<int>> matchInfo = new List<List<int>>();
+            List<List<int>> MatchInfo = new List<List<int>>();
 
-            float maxMatch = 0f;
+            float MAXmatch = 0f;
             int u = 0;
-            var queues = new List<List<int>>();
-            DieCutting dieCutting;
+            var ques = new List<List<int>>();
+            DieCutting DieCutting;
             while (u < 10)
             {
                 for (int direction = 0; direction < 4; direction++)
@@ -35,20 +39,20 @@ namespace _2024ProconTemporary
 
                     if (direction == 0)
                     {
-                        dieCutting = Case.DieCuttingUp;
+                        DieCutting = Case.DieCuttingUP;
                     }
                     else if (direction == 1)
                     {
-                        dieCutting = Case.DieCuttingDown;
+                        DieCutting = Case.DieCuttingDown;
                     }
                     else if (direction == 2)
                     {
-                        dieCutting = Case.DieCuttingLeft;
+                        DieCutting = Case.DieCuttingLeft;
                     }
                     else
                     {
 
-                        dieCutting = Case.DieCuttingRight;
+                        DieCutting = Case.DieCuttingRight;
                     }
                     for (int i = 0; i < 281; i++)
                     {
@@ -56,12 +60,12 @@ namespace _2024ProconTemporary
                         {
                             for (int x = 0; x < Practice.pieceX; x++)
                             {
-                                float matchR = MainAlgorithm.Check(Practice.answer, dieCutting(Practice.queues, Pattern.patternList[i], x, y));
-                                if (matchR > maxMatch)
+                                float MatchR = Mainalgorithm.Check(Practice.Anser, DieCutting(Practice.Ques, Type.TypeList[i], x, y));
+                                if (MatchR > MAXmatch)
                                 {
-                                    maxMatch = matchR;
-                                    queues = dieCutting(Practice.queues, Pattern.patternList[i], x, y);
-                                    matchInfo.Add(new List<int> { i, x, y, direction });
+                                    MAXmatch = MatchR;
+                                    ques = DieCutting(Practice.Ques, Type.TypeList[i], x, y);
+                                    MatchInfo.Add(new List<int> { i, x, y, direction });
                                 }
 
                             }
@@ -69,10 +73,10 @@ namespace _2024ProconTemporary
                     }
                 }
                 u++;
-                Console.WriteLine(maxMatch);
+                Console.WriteLine(MAXmatch);
             }
         }
-        public static float Check(List<List<int>> ans, List<List<int>> queues)
+        public static float Check(List<List<int>> Ans, List<List<int>> Ques)
         {
             var mass = Practice.pieceX * Practice.pieceY;
             float match = 100f / mass;
@@ -81,7 +85,7 @@ namespace _2024ProconTemporary
             {
                 for (int x = 0; x < Practice.pieceX; x++)
                 {
-                    if (ans[y][x] == queues[y][x])
+                    if (Ans[y][x] == Ques[y][x])
                     {
                         matchR += match;
                     }
