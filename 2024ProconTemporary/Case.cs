@@ -9,10 +9,10 @@ namespace _2024ProconTemporary
     public class Case
     {
       
-        public static List<List<int>> TranslatePos(List<List<int>> queues)
+        public static  List<List<int>> Transpos(List<List<int>> Ques)
         {
             var resultList = new List<List<int>>();
-            foreach (var row in queues.Select((v, i) => new { v, i }))
+            foreach (var row in Ques.Select((v, i) => new { v, i }))
             {
                 while (resultList.Count < row.v.Count)
                     resultList.Add(new List<int>());
@@ -25,130 +25,130 @@ namespace _2024ProconTemporary
 
             return resultList;
         }
-        public static List<List<int>> DieCuttingUp(List<List<int>> queues, float[,] pattern, int pointX, int pointY)
+        public static  List<List<int>> DieCuttingUP(List<List<int>> Ques, float[,] Type, int PointY, int PointX)
         {
-            var queuesT = TranslatePos(queues);
-            for (int y = 0; y < pattern.GetLength(1); y++)
+            var QuesT = Transpos(Ques);
+            for (int y = 0; y < Type.GetLength(1); y++)
             {
                 var match = new List<int>();
-                if (y + pointY < queues[0].Count)
+                if (y + PointY < Ques[0].Count)
                 {
-                    for (int x = pattern.GetLength(0) - 1; x >= 0; x--)
+                    for (int x = Type.GetLength(0) - 1; x >= 0; x--)
                     {
-                        if (pattern[x, y] == 1)
+                        if (Type[x, y] == 1)
                         {
-                            if (x + pointX < queues.Count)
+                            if (x + PointX < Ques.Count)
                             {
-                                match.Add(queues[x + pointX][y + pointY]);
-                                queuesT[y + pointY].RemoveAt(x + pointX);
+                                match.Add(Ques[x + PointX][y + PointY]);
+                                QuesT[y + PointY].RemoveAt(x + PointX);
 
                             }
                         }
 
                     }
                     match.Reverse();
-                    foreach (int x in match)
+                    foreach (int X in match)
                     {
-                        queuesT[y + pointY].Add(x);
+                        QuesT[y + PointY].Add(X);
                     }
                 }
             }
-            queuesT = TranslatePos(queuesT);
-            return queuesT;
+            QuesT = Transpos(QuesT);
+            return QuesT;
         }
-        public static List<List<int>> DieCuttingDown(List<List<int>> queues, float[,] pattern, int pointX, int pointY)
+        public static List<List<int>> DieCuttingDown(List<List<int>> Ques, float[,] Type, int PointY, int PointX)
         {
-            var queuesT = TranslatePos(queues);
-            for (int y = 0; y < pattern.GetLength(1); y++)
+            var QuesT = Transpos(Ques);
+            for (int y = 0; y < Type.GetLength(1); y++)
             {
                 var match = new List<int>();
-                if (y + pointY < queues[0].Count)
+                if (y + PointY < Ques[0].Count)
                 {
-                    for (int x = pattern.GetLength(0) - 1; x >= 0; x--)
+                    for (int x = Type.GetLength(0) - 1; x >= 0; x--)
                     {
-                        if (pattern[x, y] == 1)
+                        if (Type[x, y] == 1)
                         {
-                            if (x + pointX < queues.Count)
+                            if (x + PointX < Ques.Count)
                             {
-                                match.Add(queues[x + pointX][y + pointY]);
-                                queuesT[y + pointY].RemoveAt(x + pointX);
+                                match.Add(Ques[x + PointX][y + PointY]);
+                                QuesT[y + PointY].RemoveAt(x + PointX);
 
                             }
                         }
 
                     }
-                    queuesT[y + pointY].Reverse();
-                    foreach (int x in match)
+                    QuesT[y + PointY].Reverse();
+                    foreach (int X in match)
                     {
-                        queuesT[y + pointY].Add(x);
+                        QuesT[y + PointY].Add(X);
                     }
-                    queuesT[y + pointY].Reverse();
+                    QuesT[y + PointY].Reverse();
                 }
             }
-            queuesT = TranslatePos(queuesT);
-            return queuesT;
+            QuesT = Transpos(QuesT);
+            return QuesT;
         }
-        public static List<List<int>> DieCuttingRight(List<List<int>> queues, float[,] pattern, int pointX, int pointY)
+        public static List<List<int>> DieCuttingRight(List<List<int>> Ques, float[,] Type, int PointX, int PointY)
         {
 
-            for (int y = 0; y < pattern.GetLength(0); y++)
+            for (int y = 0; y < Type.GetLength(0); y++)
             {
                 var match = new List<int>();
-                if (y + pointY < queues.Count)
+                if (y + PointY < Ques.Count)
                 {
-                    for (int x = pattern.GetLength(1) - 1; x >= 0; x--)
+                    for (int x = Type.GetLength(1) - 1; x >= 0; x--)
                     {
-                        if (pattern[y, x] == 1)
+                        if (Type[y, x] == 1)
                         {
-                            if (x + pointX < queues[0].Count)
+                            if (x + PointX < Ques[0].Count)
                             {
-                                match.Add(queues[y + pointY][x + pointX]);
-                                queues[y + pointY].RemoveAt(x + pointX);
+                                match.Add(Ques[y + PointY][x + PointX]);
+                                Ques[y + PointY].RemoveAt(x + PointX);
 
                             }
                         }
 
                     }
-                    queues[y + pointY].Reverse();
-                    foreach (int x in match)
+                    Ques[y + PointY].Reverse();
+                    foreach (int X in match)
                     {
-                        queues[y + pointY].Add(x);
+                        Ques[y + PointY].Add(X);
                     }
-                    queues[y + pointY].Reverse();
+                    Ques[y + PointY].Reverse();
                 }
             }
-            return queues;
+            return Ques;
         }
-        public static List<List<int>> DieCuttingLeft(List<List<int>> queues, float[,] pattern, int pointX, int pointY)
+        public static List<List<int>> DieCuttingLeft(List<List<int>> Ques, float[,] Type, int PointX, int PointY)
         {
-            for (int y = 0; y < pattern.GetLength(0); y++)
+            for (int y = 0; y < Type.GetLength(0); y++)
             {
                 var match = new List<int>();
-                if (y + pointY < queues.Count)
+                if (y + PointY < Ques.Count)
                 {
-                    for (int x = pattern.GetLength(1) - 1; x >= 0; x--)
+                    for (int x = Type.GetLength(1) - 1; x >= 0; x--)
                     {
-                        if (pattern[y, x] == 1)
+                        if (Type[y, x] == 1)
                         {
-                            if (x + pointX < queues[0].Count)
+                            if (x + PointX < Ques[0].Count)
                             {
 
-                                match.Add(queues[y + pointY][x + pointX]);
-                                queues[y + pointY].RemoveAt(x + pointX);
+                                match.Add(Ques[y + PointY][x + PointX]);
+                                Ques[y + PointY].RemoveAt(x + PointX);
 
                             }
                         }
 
                     }
                     match.Reverse();
-                    foreach (int x in match)
+                    foreach (int X in match)
                     {
 
-                        queues[y + pointY].Add(x);
+                        Ques[y + PointY].Add(X);
                     }
                 }
             }
-            return queues;
+            return Ques;
         }
     }
 }
