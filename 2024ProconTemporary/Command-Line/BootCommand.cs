@@ -1,7 +1,9 @@
 using EntryPoint;
 using System;
+using _2024ProconTemporary.ReadableData;
 using _2024ProconTemporary.Com;
 using _2024ProconTemporary;
+using System.Linq;
 
 
 namespace _2024ProconTemporary.CommandLine.Commands
@@ -38,6 +40,9 @@ namespace _2024ProconTemporary.CommandLine.Commands
             }
             Console.WriteLine("Done!");
 
+            // 問題データ、回答データをstringの配列からintの2次元配列に変換する
+            ReadableProblemData convertedProblemData = new ReadableProblemData(problemData);
+
             // 問題データを表示する
             if (args.isView)
             {
@@ -60,16 +65,17 @@ namespace _2024ProconTemporary.CommandLine.Commands
                 // 自動回答モードに移行する
                 Console.WriteLine("Automatic Mode");
                 Console.WriteLine("Calculating Answer...");
-                Mainalgorithm.StartMatchCalc();
+                MainAlgorithm.MatchCalculate();
 
                 Console.WriteLine("Done!");
 
                 // 回答結果を表示する(間違っている場所、かかった手数など)
-                Console.WriteLine("Answer:");
+                CompareAnswers(problemData, answerData);
+
 
                 // これで提出するか聞く
                 Console.WriteLine("Do you want to submit this answer? (Y/n)");
-                string input = Console.ReadLine();
+                string input = Console.ReadLine() ?? "";
 
                 if (input == "N" || input == "n")
                 {
@@ -104,13 +110,22 @@ namespace _2024ProconTemporary.CommandLine.Commands
 
                 if (key.Key == ConsoleKey.Escape)
                 {
+                    // 終了
+                    Console.WriteLine("Exit Manual Mode");
                     break;
                 }
 
                 else if (key.Key == ConsoleKey.H)
                 {
                     // ヘルプを表示
+                    Console.WriteLine("Help");
                 }
+
+                else if (key.Key == ConsoleKey.Enter)
+                {
+
+                }
+
             }
 
 
@@ -118,7 +133,10 @@ namespace _2024ProconTemporary.CommandLine.Commands
 
         }
 
+        void CompareAnswers(ProblemData problemData, AnswerData answerData)
+        {
 
+        }
     }
 
 
