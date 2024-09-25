@@ -23,14 +23,14 @@ namespace _2024ProconTemporary.CommandLine.Commands
 
     public class BootCommand
     {
-        public void Handle(BootCommandClient args)
+        public async void Handle(BootCommandClient args)
         {
             Console.WriteLine("Booting...");
 
             // 問題データを取得する
             Console.WriteLine("Getting Problem Data...");
             HttpClient client = Networking.CreateClient();
-            var problemData = Networking.GetProblemData(client);
+            var problemData = await Networking.GetProblemDataAsync(client);
 
             if (problemData == null)
             {
@@ -86,7 +86,7 @@ namespace _2024ProconTemporary.CommandLine.Commands
 
                 // 回答を提出する
                 Console.WriteLine("Submitting Answer...");
-                Networking.SendAnswerData(client, answerData);
+                await Networking.SendAnswerDataAsync(client, answerData);
                 Console.WriteLine("Done!");
 
             }
