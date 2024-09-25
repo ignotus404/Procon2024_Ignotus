@@ -7,8 +7,8 @@ namespace _2024ProconTemporary.Com;
 
 public static class Networking
 {
-    private static readonly string ServerIp = Env.GetString("SERVER_IP", "127.0.0.1");
-
+    private static string EnvFilePath = "./bin/Debug/net8.0/.env";
+    private static readonly string ServerIp = Env.GetString("SERVER_IP", "127.0.0.1:3000");
     private static readonly string Token = Env.GetString("PROCON_TOKEN");
 
     private static readonly string AnswerEndPoint = $"http://{ServerIp}/answer";
@@ -16,9 +16,11 @@ public static class Networking
 
     static Networking()
     {
-        Env.Load();
+        Env.Load(EnvFilePath);
+        ServerIp = Env.GetString("SERVER_IP", "127.0.0.1:3000");
+        Token = Env.GetString("PROCON_TOKEN");
     }
-    
+
     public static HttpClient CreateClient()
     {
         return new HttpClient();
