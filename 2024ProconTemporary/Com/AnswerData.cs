@@ -8,7 +8,7 @@ public class AnswerData
 
     [JsonPropertyName("ops")] public required IList<OperationData> Ops { get; set; }
 
-    public abstract class OperationData
+    public class OperationData
     {
         public enum Side
         {
