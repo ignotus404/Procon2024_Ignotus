@@ -23,14 +23,13 @@ namespace _2024ProconTemporary.CommandLine.Commands
 
     public class BootCommand
     {
-        public async void Handle(BootCommandClient args)
+        public void Handle(BootCommandClient args)
         {
             Console.WriteLine("Booting...");
-
             // 問題データを取得する
             Console.WriteLine("Getting Problem Data...");
             HttpClient client = Networking.CreateClient();
-            var problemData = await Networking.GetProblemDataAsync(client);
+            var problemData = Networking.GetProblemData(client);
 
             if (problemData == null)
             {
@@ -40,14 +39,17 @@ namespace _2024ProconTemporary.CommandLine.Commands
             }
             Console.WriteLine("Done!");
 
+            Console.WriteLine("Converting Problem Data...");
             // 問題データ、回答データをstringの配列からintの2次元配列に変換する
             ReadableProblemData convertedProblemData = new ReadableProblemData(problemData);
-
+            Console.WriteLine("Done!");
+            Console.WriteLine("View Problem Data:");
+            convertedProblemData.Print();
             // 問題データを表示する
             if (args.isView)
             {
-                Console.WriteLine("Problem Data:");
-                Console.WriteLine(problemData.ToString());
+                Console.WriteLine("View Problem Data:");
+                convertedProblemData.Print();
             }
 
             AnswerData answerData = Answer.Create();
@@ -86,12 +88,10 @@ namespace _2024ProconTemporary.CommandLine.Commands
 
                 // 回答を提出する
                 Console.WriteLine("Submitting Answer...");
-                await Networking.SendAnswerDataAsync(client, answerData);
+                Networking.SendAnswerData(client, answerData);
                 Console.WriteLine("Done!");
 
             }
-
-
         }
 
         AnswerData ManualMode(ProblemData problemData, AnswerData answerData = null)
@@ -133,9 +133,9 @@ namespace _2024ProconTemporary.CommandLine.Commands
 
         }
 
-        void CompareAnswers(ProblemData problemData, AnswerData answerData)
+        void CompareAnswers(ReadableBoardData problemData, ReadableProblemData answerData)
         {
-
+            
         }
     }
 
