@@ -9,16 +9,18 @@ public static class Networking
 {
     private static readonly string ServerIp = Env.GetString("SERVER_IP", "127.0.0.1");
 
+    private static readonly string ServerPort = Env.GetString("SERVER_PORT", "80");
+
     private static readonly string Token = Env.GetString("PROCON_TOKEN");
 
-    private static readonly string AnswerEndPoint = $"http://{ServerIp}/answer";
-    private static readonly string ProblemEndPoint = $"http://{ServerIp}/problem";
+    private static readonly string AnswerEndPoint = $"http://{ServerIp}:{ServerPort}/answer";
+    private static readonly string ProblemEndPoint = $"http://{ServerIp}:{ServerPort}/problem";
 
     static Networking()
     {
         Env.Load();
     }
-    
+
     public static HttpClient CreateClient()
     {
         return new HttpClient();
