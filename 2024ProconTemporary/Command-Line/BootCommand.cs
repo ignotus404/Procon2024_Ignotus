@@ -71,8 +71,8 @@ namespace _2024ProconTemporary.CommandLine.Commands
 
                 Console.WriteLine("Done!");
 
-                // 回答結果を表示する(間違っている場所、かかった手数など)
-                CompareAnswers(problemData, answerData);
+                // 回答結果を表示する(間違っている場所、かかった手数など) 未実装
+
 
 
                 // これで提出するか聞く
@@ -94,10 +94,15 @@ namespace _2024ProconTemporary.CommandLine.Commands
             }
         }
 
-        AnswerData ManualMode(ProblemData problemData, AnswerData answerData = null)
-        {
-            if (answerData == null) answerData = Answer.Create();
 
+        /// <summary>
+        /// 手動で回答を作成するモードに移行する 未実装
+        /// </summary>
+        /// <param name="problemData">使用する問題データ</param>
+        /// <returns></returns>
+        AnswerData ManualMode(ProblemData problemData)
+        {
+            AnswerData answerData = Answer.Create();
             Console.WriteLine("Manual Mode");
             Console.WriteLine("Please input answer.");
 
@@ -127,15 +132,13 @@ namespace _2024ProconTemporary.CommandLine.Commands
                 }
 
             }
-
-
             return answerData;
 
         }
 
-        void CompareAnswers(ReadableBoardData problemData, ReadableProblemData answerData)
+        void CompareAnswers(ReadableProblemData problemData, ReadableProblemData answerData)
         {
-            
+
         }
     }
 
