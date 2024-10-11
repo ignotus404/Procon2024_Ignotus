@@ -11,14 +11,8 @@ namespace _2024ProconTemporary
         List<List<int>> MatchInfo = new List<List<int>>();
         List<List<int>> MatchInfos = new List<List<int>>();
         delegate List<List<int>> DieCutting(List<List<int>> queues, float[,] pattern, int pointX, int pointY);
-        static void Main()
-        {
-            
-            
-            MatchCalculate();
-        }
 
-        static void MatchCalculate()
+        public static void MatchCalculate()
         {
 
             Case cases = new Case();
@@ -92,5 +86,5 @@ namespace _2024ProconTemporary
         }
 
     }
-    
+
 }
