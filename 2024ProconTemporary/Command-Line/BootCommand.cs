@@ -68,7 +68,7 @@ namespace _2024ProconTemporary.CommandLine.Commands
                 Console.WriteLine("Automatic Mode");
                 Console.WriteLine("Calculating Answer...");
                 // ここで問題データをMainAlgorithmに渡して、回答を計算する(引数はReadableProblemData型)
-                MainAlgorithm.MatchCalculate();
+                // Mainalgorithm.MatchCalculate();
 
                 Console.WriteLine("Done!");
 

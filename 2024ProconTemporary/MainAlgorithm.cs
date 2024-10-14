@@ -1,6 +1,8 @@
 
 using _2024ProconTemporary.Com;
+using _2024ProconTemporary.ReadableData;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -10,7 +12,7 @@ namespace _2024ProconTemporary
 
     public class Mainalgorithm
     {
-       
+
         Case cases = new Case();
         Practice practice = new Practice();
         Pattern Pattern = new Pattern();
@@ -35,15 +37,15 @@ namespace _2024ProconTemporary
             Hyoji(Practice.QuesTes2);
             //Practice.QuesTes = QuestionShunting(Practice.QuesTes2,Practice.AnsTes2);
             // Console.WriteLine("");
-            for(int i = 0; i < 1; i++)
+            for (int i = 0; i < 1; i++)
             {
                 IndexCount(Practice.QuesTes2);
                 MainTest(Practice.QuesTes2, Practice.AnsTes2, 0);
             }
-            
+
 
         }
-        public  AnswerData Calculation(ProblemData problemData)
+        public AnswerData Calculation(ProblemData problemData)
         {
             Pattern.Patterns();
             Practice.Practices();
@@ -58,8 +60,8 @@ namespace _2024ProconTemporary
             }
             return new AnswerData
             {
-                 N = 0,
-                 Ops = new List<AnswerData.OperationData>()
+                N = 0,
+                Ops = new List<AnswerData.OperationData>()
             };
         }
         public static void Hyoji(List<List<int>> Ans)
@@ -109,7 +111,7 @@ namespace _2024ProconTemporary
                         result[Y].Add(ListWarp(X, Y));
                     }
                 }
-                ZeroCount =  WarpValuationCalculation(result, Ans, Practice.pieceX, Practice.pieceY);
+                ZeroCount = WarpValuationCalculation(result, Ans, Practice.pieceX, Practice.pieceY);
                 if (ZeroCount > MaxZeroCount)
                 {
                     MaxZeroCount = ZeroCount;
@@ -205,8 +207,8 @@ namespace _2024ProconTemporary
                 WantIndex[0].Add(new List<int>());
                 WantIndex[0][Y] = Search(Ques, Ans, WantIndex[0][Y], 1, Y);
                 WantIndex[1].Add(new List<int>());
-                WantIndex[1][Y] = Search(Ques, Ans, WantIndex[1][Y], WantIndex[0][Y].Count  + 2, Y);
-                NextSearch(Ques, Ans, WantIndex, WantIndex[0][Y].Count + WantIndex[1][Y].Count  + 2, Y);
+                WantIndex[1][Y] = Search(Ques, Ans, WantIndex[1][Y], WantIndex[0][Y].Count + 2, Y);
+                NextSearch(Ques, Ans, WantIndex, WantIndex[0][Y].Count + WantIndex[1][Y].Count + 2, Y);
 
             }
 
@@ -267,7 +269,7 @@ namespace _2024ProconTemporary
                         }
                         break;
                     }
-                    if(i== 1)
+                    if (i == 1)
                     {
                         ques[Y].RemoveAt(QuesNumberIndex);
                     }
@@ -307,7 +309,7 @@ namespace _2024ProconTemporary
         }
         public static void Check(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> WantTypeIndex)
         {
-            
+
         }
 
         public static void Overcalculation(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> WantTypeIndex)
@@ -372,6 +374,87 @@ namespace _2024ProconTemporary
                 }
             }
 
+        }
+
+        ///<summary>
+        /// 列ごとを揃えたあとに、行ごとで揃えるために必要な型の種類と抜く座標を返す
+        ///</summary>
+        public (int, int, int, int) SearchDie(ReadableProblemData problemData, List<List<int>> ques, List<List<int>> ans)
+        {
+            int useDieNum = 0;
+            int cuttingDirection = 0;
+            int usingPositionX = 0;
+            int usingPositionY = 0;
+            int nowMaxEffectiveScore = 0;
+            List<List<int>> collectPieceArray = CreateCollectPieceArray(ques, ans);
+
+            // 仕様メモ
+            // 左端、もしくは右端を固定し、一方向にしか動かないようにする
+            // for文を回して、どの型が一番効率的かを計算する
+            // 効率的かどうかは、(揃ったピースの数-揃わなくなったピースの数)で判断する
+            // 効率的なものを見つけたら、使うべき型、使うべき座標を返す
+
+            for (int useDieIndex = 0; useDieIndex < problemData.General.Patterns.Count; useDieIndex++)
+            {
+                for (int x = 0; x < Xmax; x++)
+                {
+                    for (int y = 0; y < Ymax; y++)
+                    {
+                        int rightCuttingEffectiveScore;
+                        int leftCuttingEffectiveScore;
+                        List<List<int>> tempQues = Case.Copy(ques);
+                        List<List<int>> tempAns = Case.Copy(ans);
+                        List<List<int>> leftCuttingQues = Case.DieCuttingLeft(tempQues, Pattern.PatternList[useDieIndex], y, x, Pattern.PatternList[useDieIndex].GetLength(1), Pattern.PatternList[useDieIndex].GetLength(0));
+                        List<List<int>> rightCuttingQues = Case.DieCuttingRight(tempQues, Pattern.PatternList[useDieIndex], y, x, Pattern.PatternList[useDieIndex].GetLength(1), Pattern.PatternList[useDieIndex].GetLength(0));
+
+                        List<List<int>> leftCuttingCollectPieceArray = CreateCollectPieceArray(leftCuttingQues, tempAns);
+                        List<List<int>> rightCuttingCollectPieceArray = CreateCollectPieceArray(rightCuttingQues, tempAns);
+
+                        rightCuttingEffectiveScore = CalculateEffectiveScore(collectPieceArray, rightCuttingCollectPieceArray);
+                        leftCuttingEffectiveScore = CalculateEffectiveScore(collectPieceArray, leftCuttingCollectPieceArray);
+
+                        if (MathF.Max(rightCuttingEffectiveScore, leftCuttingEffectiveScore) > nowMaxEffectiveScore)
+                        {
+                            nowMaxEffectiveScore = (int)MathF.Max(rightCuttingEffectiveScore, leftCuttingEffectiveScore);
+                            useDieNum = useDieIndex;
+                            usingPositionX = x;
+                            usingPositionY = y;
+                        }
+                    }
+                }
+            }
+
+            return (useDieNum, cuttingDirection, usingPositionX, usingPositionY);
+
+        }
+
+        int CalculateEffectiveScore(List<List<int>> beforeCollectPieceArray, List<List<int>> afterCollectPieceArray)
+        {
+            int effectiveScore = 0;
+            for (int y = 0; y < Ymax; y++)
+            {
+                for (int x = 0; x < Xmax; x++)
+                {
+                    effectiveScore += (int)beforeCollectPieceArray[y][x] - afterCollectPieceArray[y][x]
+                }
+            }
+            return effectiveScore;
+        }
+
+        List<List<int>> CreateCollectPieceArray(List<List<int>> ques, List<List<int>> ans)
+        {
+            List<List<int>> collectPieceArray = new List<List<int>>();
+            for (int x = 0; x < Xmax; x++)
+            {
+                List<int> collectPieceRaw = new List<int>();
+                for (int y = 0; y < Ymax; y++)
+                {
+                    if (ques[y][x] == ans[y][x]) collectPieceRaw.Add(1);
+                    else collectPieceRaw.Add(0);
+                }
+                collectPieceArray.Add(collectPieceRaw);
+            }
+            return collectPieceArray;
         }
 
     }
