@@ -19,7 +19,10 @@ public static class Networking
     static Networking()
     {
         Env.Load();
+        ServerIp = Env.GetString("SERVER_IP", "127.0.0.1:3000");
+        Token = Env.GetString("PROCON_TOKEN");
     }
+
 
     public static HttpClient CreateClient()
     {
