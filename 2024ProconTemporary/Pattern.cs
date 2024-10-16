@@ -8,78 +8,116 @@ namespace _2024ProconTemporary
 {
     public class Pattern
     {
-        public static float[][,] patternList = new float[281][,];
-        float i;
-        double j;
-        int k = 1;
-        Random random = new Random();
-        void Awake()
+        public static float[][,] PatternList = new float[281][,];
+        
+        public static void Patterns()
         {
-            for (var i = 0; i < 256; i++)
+            int i;
+            double j;
+            int k = 1;
+            Random Random = new Random();
+            for ( i = 0; i < 257; i++)
             {
-                patternList[i] = new float[random.Next(1, 257), random.Next(1, 257)];
-                for (int y = 0; y < patternList[i].GetLength(1); y++)
+                PatternList[i] = new float[Random.Next(0, 257), Random.Next(0, 257)];
+                for (int y = 0; y < PatternList[i].GetLength(1); y++)
                 {
-                    for (int x = 0; x < patternList[i].GetLength(0); x++)
+                    for (int x = 0; x < PatternList[i].GetLength(0); x++)
                     {
-                        patternList[i][x, y] = random.Next(0, 2);
+                        PatternList[i][x, y] = Random.Next(0, 2);
                     }
                 }
             }
-            patternList[256] = new float[1, 1]{
+            PatternList[254] = new float[2, 16]{
+                  {1,1,1,1,1,1,1,1,1,0,0,0,1,1,1,1},
+                  {1,1,1,0,0,1,1,1,1,0,1,0,1,0,1,0},
+            };
+            PatternList[255] = new float[1, 32]{
+                //{0,0,0,0,0,1,1,1,0,2,1,2,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,2,1,1,0,2},
+                //{0,0,1,0,1,0,2,2,1,3,0,0,3,2,2,3,3,3,2,3,2,1,3,2,1,2,2,2,0,3,1,1},
+                //{0,0,1,0,1,0,2,2,1,3,0,0,3,2,2,3,3,3,2,3,2,1,3,2,1,2,2,2,0,3,1,1},
+                  {0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,1,1,0,0},
+                //{0,0,2,2,0,2,3,2,0,3,0,0,1,1,1,3,0,3,2,2,3,3,3,2,3,1,2,1,2,2,1,1}
+                //{0,2,2,0,2,3,0,3,0,0,1,0,1,1,3,0,3,2,2,3,3,3,2,3,1,2,1,2,2,2,1,1},
+                //
+                //{0,0,1,0,1,1,3,2,2,3,3,3,2,3,1,2,1,2,2,1},
+                //{3,0,2,1,1},Ques
+                //{0,2,2,0,2,3,0,3},Ques
+                //31,27,11,9 29,28,22,20,10,7,6,5
+                //{0,0,1,2,2,3}
+                
+                //{1,1,2,1,3,2,0,3,1,2,1,3,0,3,1,2,2,3, 0,2, 0,2,2,0,2,3,0,3, 3,0,2,1},Ans 答えの間から次の答えグループになるようにぬく
+            };
+            PatternList[256] = new float[15, 27]{
 
-            { 1 }
+            { 1,1,1,0,1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1},
+            { 0,0,0,1,1,0,0,0,1,1,0,1,1,0,0,0,1,1,1,1,0,1,1,1,0,0,1},
+            { 0,0,1,0,1,0,1,0,0,1,0,0,0,1,0,0,0,1,1,1,0,1,0,1,1,0,0} ,
+            { 0,0,0,1,0,0,1,1,1,1,0,0,1,1,0,1,0,1,1,0,0,0,0,0,0,1,1},
+            { 1,1,1,0,0,1,1,0,1,0,0,1,0,1,1,0,1,1,1,0,1,0,0,0,1,0,1},
+            { 0,0,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,0,0,1,1,0},
+            { 0,1,0,0,0,1,0,0,0,1,0,0,1,0,0,1,1,0,1,0,0,0,1,1,1,0,1},
+            { 0,0,1,1,0,1,1,0,1,0,1,0,1,1,1,0,0,0,1,0,0,1,1,0,1,1,1},
+            { 0,1,1,0,0,0,0,0,1,0,1,0,0,0,1,1,1,1,0,1,1,1,0,0,0,1,0},
+            { 0,1,1,0,1,0,0,0,1,1,0,1,0,1,1,1,0,0,0,1,0,0,1,1,0,0,1},
+            { 0,1,0,1,0,0,0,0,0,0,0,1,0,1,0,0,1,0,1,0,0,0,1,1,1,0,0},
+            { 0,1,0,0,0,0,1,0,0,0,1,1,0,1,1,0,0,0,1,1,1,0,0,0,1,0,1},
+            { 0,0,1,1,1,1,0,0,1,0,1,0,0,1,0,1,0,0,0,0,1,1,1,0,0,1,1},
+            { 0,1,1,0,0,1,0,0,1,1,0,0,0,0,0,0,1,1,0,1,1,1,0,0,1,0,1},
+            { 1,1,1,0,1,0,0,0,0,0,0,1,1,1,0,0,0,0,1,1,0,0,1,0,0,0,1},
+
         };
-            for (i = 1, j = 2; j <= 256; i++, j = Math.Pow(2, i))
-            {
-                for (int l = 1; k <= 3 * i; k++, l++)
-                {
 
-                    patternList[k + 256] = new float[(int)j, (int)j];
-                    patternList[k + 256] = PatternAssignment(patternList[k + 256], l);
-                }
-            }
+            for ( i = 1, j = 2; j <= 256; i++, j = Math.Pow(2, i))
+              {
+                  for (int l = 1; k <= 3 * i; k++, l++)
+                  {
+
+                      PatternList[k + 256] = new float[(int)j, (int)j];
+                      PatternList[k + 256] = Typeassignment(PatternList[k + 256], l);
+                  }
+              }
+            
         }
 
-        float[,] PatternAssignment(float[,] @case, int type)
+        static float[,] Typeassignment(float[,] Case, int Type)
         {
-            if (type == 1)
+            if (Type == 1)
             {
-                for (int y = 0; y < @case.GetLength(1); y++)
+                for (int y = 0; y < Case.GetLength(1); y++)
                 {
-                    for (int x = 0; x < @case.GetLength(0); x++)
+                    for (int x = 0; x < Case.GetLength(0); x++)
                     {
-                        @case[x, y] = 1;
+                        Case[x, y] = 1;
                     }
 
                 }
 
 
             }
-            else if (type == 2)
+            else if (Type == 2)
             {
-                for (int y = 0; y < @case.GetLength(1); y += 2)
+                for (int y = 0; y < Case.GetLength(1); y += 2)
                 {
-                    for (int x = 0; x < @case.GetLength(0); x++)
+                    for (int x = 0; x < Case.GetLength(0); x++)
                     {
 
-                        @case[x, y] = 1;
+                        Case[x, y] = 1;
                     }
                 }
             }
-            else if (type == 3)
+            else if (Type == 3)
             {
-                for (int y = 0; y < @case.GetLength(1); y++)
+                for (int y = 0; y < Case.GetLength(1); y++)
                 {
-                    for (int x = 0; x < @case.GetLength(0); x += 2)
+                    for (int x = 0; x < Case.GetLength(0); x += 2)
                     {
 
-                        @case[x, y] = 1;
+                        Case[x, y] = 1;
                     }
                 }
             }
 
-            return @case;
+            return Case;
         }
     }
 }

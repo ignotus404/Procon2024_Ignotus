@@ -2,13 +2,13 @@ using System.Text.Json.Serialization;
 
 namespace _2024ProconTemporary.Com;
 
-public abstract class ProblemData
+public class ProblemData
 {
     [JsonPropertyName("board")] public required BoardData Board { get; set; }
 
     [JsonPropertyName("general")] public required GeneralData General { get; set; }
 
-    public abstract class BoardData
+    public class BoardData
     {
         [JsonPropertyName("width")] public required int Width { get; set; }
 
@@ -19,13 +19,13 @@ public abstract class ProblemData
         [JsonPropertyName("goal")] public required IList<string> Goal { get; set; }
     }
 
-    public abstract class GeneralData
+    public class GeneralData
     {
         [JsonPropertyName("n")] public required int N { get; set; }
 
         [JsonPropertyName("patterns")] public required IList<PatternData> Patterns { get; set; }
 
-        public abstract class PatternData
+        public class PatternData
         {
             [JsonPropertyName("p")] public required int P { get; set; }
 

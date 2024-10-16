@@ -8,6 +8,7 @@ Author: ms0503
 ```env
 PROCON_TOKEN=<トークン>
 SERVER_IP=<競技鯖のIP>
+SERVER_PORT=<競技鯖のポート>
 ```
 を書いておきます。  
 (もしくはプロジェクト内(`2024ProconTemporary/`など)に`.env`を作成しプロパティで出力ディレクトリにコピーさせるようにして上記内容を記述する)
