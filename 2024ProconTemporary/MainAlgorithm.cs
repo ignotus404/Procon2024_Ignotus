@@ -1,4 +1,3 @@
-
 using _2024ProconTemporary.Com;
 using System;
 using System.IO;
@@ -10,7 +9,7 @@ namespace _2024ProconTemporary
 
     public class Mainalgorithm
     {
-       
+
         Case cases = new Case();
         Practice practice = new Practice();
         Pattern Pattern = new Pattern();
@@ -76,44 +75,44 @@ namespace _2024ProconTemporary
             Practice.Practices();
             Ymax = Practice.AnsTes2.Count;
             Xmax = Practice.AnsTes2[0].Count;
-           var Ops = new List<AnswerData.OperationData>();
+            var Ops = new List<AnswerData.OperationData>();
             var answerS = QuestionShunting(Practice.QuesTes, Practice.AnsTes);
-            
+
             PatternCount(Practice.QuesTes2, Pattern.PatternList);
             DieCutting dieCutting;
             if (direction == 0)
-              {
-                  dieCutting = Case.DieCuttingUP;
-              }
-              else if (direction == 1)
-              {
-                  dieCutting = Case.DieCuttingDown;
+            {
+                dieCutting = Case.DieCuttingUP;
+            }
+            else if (direction == 1)
+            {
+                dieCutting = Case.DieCuttingDown;
 
-              }
-              else if (direction == 2)
-              {
-                  dieCutting = Case.DieCuttingLeft;
-              }
-              else
-              {
-                  dieCutting = Case.DieCuttingRight;
-              }
-              for (int i = 0; i < 10; i++)
-              {
-                    IndexCount(Practice.QuesTes2);
-                    Practice.QuesTes2 = dieCutting(Practice.QuesTes2, MainTest(Practice.QuesTes2, Practice.AnsTes2, 0), 0, 0, 0, 0);
-                    
-              }
-            FirstSort(Practice.QuesTes2, Practice.AnsTes2,dieCutting);
+            }
+            else if (direction == 2)
+            {
+                dieCutting = Case.DieCuttingLeft;
+            }
+            else
+            {
+                dieCutting = Case.DieCuttingRight;
+            }
+            for (int i = 0; i < 10; i++)
+            {
+                IndexCount(Practice.QuesTes2);
+                Practice.QuesTes2 = dieCutting(Practice.QuesTes2, MainTest(Practice.QuesTes2, Practice.AnsTes2, 0), 0, 0, 0, 0);
+
+            }
+            FirstSort(Practice.QuesTes2, Practice.AnsTes2, dieCutting);
             Hyoji(ZeroIndexList[255]);
             //Hyoji(Practice.queues);
-            if(MaxN > N)
+            if (MaxN > N)
             {
                 MaxN = N;
                 direction += 1;
             }
         }
-        static  void FirstSort(List<List<int>> queses,List<List<int>> answer,DieCutting dieCutting)
+        static void FirstSort(List<List<int>> queses, List<List<int>> answer, DieCutting dieCutting)
         {
 
             var answerT = QuestionShunting(queses, answer);
@@ -121,7 +120,7 @@ namespace _2024ProconTemporary
             {
                 IndexCount(Practice.QuesTes2);
                 Practice.QuesTes2 = dieCutting(Practice.QuesTes2, MainTest(Practice.QuesTes2, Practice.AnsTes2, 0), 0, 0, 0, 0);
-                Match  = Check(answer, queses);
+                Match = Check(answer, queses);
             }
 
         }
@@ -156,7 +155,7 @@ namespace _2024ProconTemporary
 
         public static List<List<int>> QuestionShunting(List<List<int>> Ques, List<List<int>> Ans)
         {
-            
+
             var Maxresult = new List<List<int>>();
             var MaxZeroCount = 0;
             var ZeroCount = 0;
@@ -172,7 +171,7 @@ namespace _2024ProconTemporary
                         result[Y].Add(ListWarp(X, Y));
                     }
                 }
-                ZeroCount =  WarpValuationCalculation(result, Ans, Practice.pieceX, Practice.pieceY);
+                ZeroCount = WarpValuationCalculation(result, Ans, Practice.pieceX, Practice.pieceY);
                 if (ZeroCount > MaxZeroCount)
                 {
                     MaxZeroCount = ZeroCount;
@@ -268,16 +267,16 @@ namespace _2024ProconTemporary
                 WantIndex[0].Add(new List<int>());
                 WantIndex[0][Y] = Search(Ques, Ans, WantIndex[0][Y], 1, Y);
                 WantIndex[1].Add(new List<int>());
-                WantIndex[1][Y] = Search(Ques, Ans, WantIndex[1][Y], WantIndex[0][Y].Count  + 1, Y);
+                WantIndex[1][Y] = Search(Ques, Ans, WantIndex[1][Y], WantIndex[0][Y].Count + 1, Y);
                 Hyoji(WantIndex[0]);
                 Hyoji(WantIndex[1]);
-                NextSearch(Ques, Ans, WantIndex, WantIndex[0][Y].Count + WantIndex[1][Y].Count  + 1, Y);
+                NextSearch(Ques, Ans, WantIndex, WantIndex[0][Y].Count + WantIndex[1][Y].Count + 1, Y);
                 //WantIndex[1][Y].Sort();
                 //WantIndex[1][Y].Reverse();
             }
             //Hyoji(WantIndex[1]);
             Console.WriteLine("");
-            return  IndexTest(Ques,Ans,WantIndex);
+            return IndexTest(Ques, Ans, WantIndex);
         }
         public static List<int> Search(List<List<int>> Ques, List<List<int>> Ans, List<int> IndexList, int exclusion, int Y)
         {
@@ -312,13 +311,13 @@ namespace _2024ProconTemporary
         public static List<int> NextSearch(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> IndexList, int exclusion, int Y)
         {
             var ques = Case.Copy(Ques);
-            
+
             for (int i = 0; i < 2; i++)
             {
                 int N = Xmax;
                 for (int Number = Xmax - exclusion; Number > 0; Number--)
                 {
-                    
+
                     int QuesNumberIndex = NumberIndexList[Ans[Y][Number]][Y].FindLast(item => item < N);
                     if (QuesNumberIndex == 0)
                     {
@@ -330,13 +329,13 @@ namespace _2024ProconTemporary
                                 {
                                     IndexList[1][Y].Add(QuesNumberIndex);
                                 }
-                                
+
                             }
                             NumberIndexList[Ans[Y][Number]][Y].Remove(QuesNumberIndex);
                         }
                         break;
                     }
-                    if(i== 1)
+                    if (i == 1)
                     {
                         IndexList[1][Y].Add(QuesNumberIndex);
                         //exclusion--;
@@ -355,7 +354,7 @@ namespace _2024ProconTemporary
             var TypeList = new List<int>();
             var TypeEvaluationValueList = new int[281];
             //配列大きさ順にソートして、はみ出す分はゼロに置く
-            
+
 
         }
         public static float[,] IndexTest(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> WantTypeIndex)
@@ -366,7 +365,7 @@ namespace _2024ProconTemporary
             {
                 for (int X = 0; X < 256; X++)
                 {
-                     rnd.Next(0, 2);
+                    rnd.Next(0, 2);
                 }
             }
             for (int Y = 0; Y < WantTypeIndex[0].Count; Y++)
@@ -383,7 +382,7 @@ namespace _2024ProconTemporary
                     Test[Y, WantTypeIndex[1][Y][X]] = 1;
                 }
             }
-            
+
             return Test;
         }
 
@@ -395,18 +394,18 @@ namespace _2024ProconTemporary
         {
             //横と縦の期待値
             //var X = 0;
-            foreach(var i in PatternSizeListOver)
+            foreach (var i in PatternSizeListOver)
             {
                 for (int Y = 0; Y < Ans.Count; Y++)
                 {
-                    for (int j = 0;  j + WantTypeIndex[0][Y].Count < PatternList[i].GetLength(1); j++)
+                    for (int j = 0; j + WantTypeIndex[0][Y].Count < PatternList[i].GetLength(1); j++)
                     {
-                        foreach(var X in WantTypeIndex[0][Y])
+                        foreach (var X in WantTypeIndex[0][Y])
                         {
-                            if (ZeroIndexList[i][Y].Contains(X+j) == false)
+                            if (ZeroIndexList[i][Y].Contains(X + j) == false)
                             {
 
-                            } 
+                            }
                         }
                     }
                 }
@@ -416,25 +415,25 @@ namespace _2024ProconTemporary
         {
             //横と縦の期待値
             //var X = 0;
-            
-                for (int Y = 0; Y < Ans.Count; Y++)
+
+            for (int Y = 0; Y < Ans.Count; Y++)
+            {
+                for (int j = 0; j + WantTypeIndex[0][Y].Count < PatternList[0].GetLength(1); j++)
                 {
-                    for (int j = 0; j + WantTypeIndex[0][Y].Count < PatternList[0].GetLength(1); j++)
+                    foreach (var X in WantTypeIndex[0][Y])
                     {
-                        foreach (var X in WantTypeIndex[0][Y])
+                        if (ZeroIndexList[0][Y].Contains(X + j) == false)
                         {
-                            if (ZeroIndexList[0][Y].Contains(X + j) == false)
-                            {
                             WantTypeIndex[0].Contains(ZeroIndexList[0][0]);
-                            }
                         }
                     }
                 }
-            
+            }
+
         }
         public static List<List<List<int>>> PatternCopy(List<List<int>> queses, float[][,] PatternList)
         {
-           var PatternCopyList = new List<List<List<int>>>();
+            var PatternCopyList = new List<List<List<int>>>();
             for (int i = 0; i < PatternList.Length; i++)
             {
                 PatternCopyList.Add(new List<List<int>>());
@@ -517,7 +516,7 @@ namespace _2024ProconTemporary
 
                 }
             }
-            
+
 
         }
         public static float Check(List<List<int>> ans, List<List<int>> queues)
@@ -540,11 +539,11 @@ namespace _2024ProconTemporary
         }
         public static void Test()
         {
-          
+
         }
 
         public static (int, int, int, int) SearchDie(List<List<int>> ques, List<List<int>> ans)
-            {
+        {
             int useDieNum = 0;
             int cuttingDirection = 0;
             int usingPositionX = 0;
@@ -623,5 +622,4 @@ namespace _2024ProconTemporary
 
     }
 
-    }
-
+}
