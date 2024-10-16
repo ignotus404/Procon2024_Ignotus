@@ -7,19 +7,29 @@ namespace _2024ProconTemporary.Com;
 
 public static class Networking
 {
-    private static string EnvFilePath = "./bin/Debug/net8.0/.env";
-    private static readonly string ServerIp = Env.GetString("SERVER_IP", "127.0.0.1:3000");
+    private static readonly string ENV_PATH = @"./.env";
+    private static readonly string ServerIp = Env.GetString("SERVER_IP", "127.0.0.1");
+
+    private static readonly string ServerPort = Env.GetString("SERVER_PORT", "3000");
+
     private static readonly string Token = Env.GetString("PROCON_TOKEN");
 
-    private static readonly string AnswerEndPoint = $"http://{ServerIp}/answer";
-    private static readonly string ProblemEndPoint = $"http://{ServerIp}/problem";
+    private static readonly string AnswerEndPoint;
+    private static readonly string ProblemEndPoint;
 
     static Networking()
     {
-        Env.Load(EnvFilePath);
-        ServerIp = Env.GetString("SERVER_IP", "127.0.0.1:3000");
-        Token = Env.GetString("PROCON_TOKEN");
+        Env.Load(ENV_PATH);
+        ServerIp = Env.GetString("SERVER_IP", "127.0.0.1");
+        ServerPort = Env.GetString("SERVER_PORT", "3000");
+        Token = Env.GetString("PROCON_TOKEN", "natori4d166dbccdd7a5a875f1246f18bf46c1f9d85d9c6e2d8f1f05c82f85da");
+        AnswerEndPoint = $"http://{ServerIp}:{ServerPort}/answer";
+        ProblemEndPoint = $"http://{ServerIp}:{ServerPort}/problem";
+        Console.WriteLine($"Server IP: {ServerIp}");
+        Console.WriteLine($"Server Port: {ServerPort}");
+        Console.WriteLine($"Token: {Token}");
     }
+
 
     public static HttpClient CreateClient()
     {
