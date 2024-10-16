@@ -137,7 +137,7 @@ namespace _2024ProconTemporary
         }
         public static List<List<int>> DieCuttingLeft(List<List<int>> queues, float[,] pattern, int PointX, int PointY, int PatternX, int PatternY)
         {
-            for (int y = 0; y < pattern.GetLength(1); y++)
+            for (int y = 0; y < pattern.GetLength(0); y++)
             {
                 var match = new List<int>();
                 if (y + PointY < queues.Count)
