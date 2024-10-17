@@ -8,7 +8,7 @@ namespace _2024ProconTemporary
 {
     public class Pattern
     {
-        public static float[][,] PatternList = new float[281][,];
+       public static List<List<List<int>>> PatternList = new List<List<List<int>>>();
 
         public static void Patterns()
         {
@@ -16,60 +16,50 @@ namespace _2024ProconTemporary
             double j;
             int k = 1;
             Random Random = new Random();
-            for (i = 0; i < 257; i++)
+            for (i = 0; i < 256; i++)
             {
-                PatternList[i] = new float[Random.Next(0, 257), Random.Next(0, 257)];
-                for (int y = 0; y < PatternList[i].GetLength(1); y++)
+                PatternList.Add(new List<List<int>>());
+                int Warp = Random.Next(0, 257);
+                int Side = Random.Next(0, 257);
+                for (int y = 0; y < Warp; y++)
                 {
-                    for (int x = 0; x < PatternList[i].GetLength(0); x++)
+                    PatternList[i].Add(new List<int>());
+                    for (int x = 0; x < Side; x++)
                     {
-                        PatternList[i][x, y] = Random.Next(0, 2);
+                        PatternList[i][y].Add(Random.Next(0, 2));
                     }
                 }
             }
+            PatternList.Add(new List<List<int>>());
+            PatternList[256].Add(new List<int>());
+            PatternList[256][0].Add(1);
 
+            
             for (i = 1, j = 2; j <= 256; i++, j = Math.Pow(2, i))
-            {
+            { 
                 for (int l = 1; k <= 3 * i; k++, l++)
                 {
-
-                    PatternList[k + 256] = new float[(int)j, (int)j];
-                    PatternList[k + 256] = Typeassignment(PatternList[k + 256], l);
+                    PatternList.Add(new List<List<int>>());
+                    PatternList[k + 256] = PatternAssignment(PatternList[k + 256], l,i,i);
                 }
             }
-            PatternList[255] = new float[15, 32]
-            {
-               { 1,0,1,1,0,0,0,1,1,1,1,0,0,0,0, 1,0,1,1,0,0,0,1,1,1,1,0,0,1,0,1,1 },
-               { 1,1,1,1,0,0,0,1,1,1,1,0,0,0,0, 1,0,1,1,0,0,0,1,1,1,1,0,0,0,0,1,0 },
-               { 1,0,1,1,0,0,0,1,1,1,1,0,0,0,1, 1,0,1,1,0,0,1,0,0,1,1,0,1,0,1,1,1 },
-               { 1,0,1,1,0,0,0,1,0,1,1,0,0,0,1, 1,0,1,1,0,1,1,1,0,1,1,0,0,0,1,1,1 },
-               { 1,0,1,1,0,0,0,1,0,1,1,0,0,1,1, 1,0,1,1,0,1,0,1,0,0,1,0,0,0,1,1,1 },
-               { 1,0,1,1,0,0,0,1,0,1,1,0,1,1,0, 1,0,1,1,0,1,0,1,1,1,0,0,1,0,0,1,0 },
-               { 1,0,1,1,0,0,0,1,0,1,1,0,1,0,0, 1,0,1,1,0,1,0,1,1,1,1,1,0,0,1,1,0 },
-               { 1,0,1,1,0,0,0,1,0,0,1,0,1,0,0, 1,0,1,1,0,1,0,1,0,1,0,1,1,0,0,1,1 },
-               { 1,0,1,1,0,0,0,1,1,0,1,0,1,0,0, 1,0,1,1,0,1,0,1,0,1,1,1,0,0,0,1,0 },
-               { 1,0,1,1,0,0,1,1,1,0,0,1,1,0,0, 1,0,1,1,0,1,0,1,0,1,0,1,0,0,0,1,1 },
-               { 1,0,1,1,0,0,0,1,1,1,1,0,0,0,0, 1,0,1,1,0,1,0,1,1,1,1,0,0,0,0,1,0 },
-               { 1,0,1,1,0,0,0,1,1,1,1,0,0,0,0, 1,0,1,1,1,1,0,1,1,1,1,0,1,1,0,1,0 },
-               { 1,0,1,1,0,0,0,1,1,1,1,0,0,0,0, 1,0,1,1,0,0,0,1,1,1,1,0,0,1,1,1,0 },
-               { 1,0,1,1,0,0,0,1,1,1,1,0,0,0,0, 1,0,1,1,0,0,0,1,1,1,1,0,0,1,1,1,1 },
-               { 1,0,1,1,0,0,0,1,1,1,1,0,0,0,0, 1,0,1,1,0,0,0,1,1,1,1,0,0,1,1,1,0 },
-               
-               
-            };
+            
         }
         
         
 
-        static float[,] Typeassignment(float[,] Case, int Type)
+        static List<List<int>> PatternAssignment(List<List<int>> PatternList, int Type, int Warp,int Side)
         {
+            
             if (Type == 1)
             {
-                for (int y = 0; y < Case.GetLength(1); y++)
+
+                for (int y = 0; y < Warp; y++)
                 {
-                    for (int x = 0; x < Case.GetLength(0); x++)
+                    PatternList.Add(new List<int>());
+                    for (int x = 0; x < Side; x++)
                     {
-                        Case[x, y] = 1;
+                        PatternList[y].Add(1);
                     }
 
                 }
@@ -78,28 +68,43 @@ namespace _2024ProconTemporary
             }
             else if (Type == 2)
             {
-                for (int y = 0; y < Case.GetLength(1); y += 2)
+                for (int y = 0; y < Warp; y ++)
                 {
-                    for (int x = 0; x < Case.GetLength(0); x++)
+                    PatternList.Add(new List<int>());
+                    for (int x = 0; x < Side; x++)
                     {
-
-                        Case[x, y] = 1;
+                        if (y / 2 == 0)
+                        {
+                            PatternList[y].Add(1);
+                        }
+                        else
+                        {
+                            PatternList[y].Add(0);
+                        }
                     }
                 }
             }
             else if (Type == 3)
             {
-                for (int y = 0; y < Case.GetLength(1); y++)
+                for (int y = 0; y < Warp; y++)
                 {
-                    for (int x = 0; x < Case.GetLength(0); x += 2)
+                    PatternList.Add(new List<int>());
+                    for (int x = 0; x < Side; x += 2)
                     {
 
-                        Case[x, y] = 1;
+                        if (x / 2 == 0)
+                        {
+                            PatternList[y].Add(1);
+                        }
+                        else
+                        {
+                            PatternList[y].Add(0);
+                        }
                     }
                 }
             }
 
-            return Case;
+            return PatternList;
         }
     }
 }

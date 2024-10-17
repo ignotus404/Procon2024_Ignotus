@@ -9,7 +9,7 @@ namespace _2024ProconTemporary
 
     public class Mainalgorithm
     {
-
+        
         Case cases = new Case();
         Practice practice = new Practice();
         Pattern Pattern = new Pattern();
@@ -23,15 +23,19 @@ namespace _2024ProconTemporary
         static List<List<List<int>>> OneIndexList = new List<List<List<int>>>();
         static List<int> PatternSizeListOver = new List<int>();
         static List<int> PatternSizeListNotOver = new List<int>();
-        delegate List<List<int>> DieCutting(List<List<int>> queues, float[,] pattern, int pointX, int pointY, int PatternX, int PatternY);
+        delegate List<List<int>> DieCutting(List<List<int>> queues, List<List<int>> pattern, int pointX, int pointY, int PatternX, int PatternY);
         public static int Ymax = 0;
         public static int Xmax = 0;
         public static void Main()
         {
+            Pattern.Patterns();
+            Practice.Practices();
             DieCutting dieCutting;
             dieCutting = Case.DieCuttingUP;
             //CalculationTest(0,0);
             //FirstSort(Case.TranslatePos(Practice.QuesTes),Practice.AnsTes, dieCutting);
+           Hyoji(Case.DieCuttingLeft(Practice.QuesTes2, Pattern.PatternList[256], 0, 0, 0, 0));
+
             Test();
         }
         public AnswerData Calculation(ProblemData problemData, int direction, int MaxN, AnswerData.OperationData operationData)
@@ -100,7 +104,7 @@ namespace _2024ProconTemporary
             for (int i = 0; i < 10; i++)
             {
                 IndexCount(Practice.QuesTes2);
-                Practice.QuesTes2 = dieCutting(Practice.QuesTes2, MainTest(Practice.QuesTes2, Practice.AnsTes2, 0), 0, 0, 0, 0);
+                //Practice.QuesTes2 = dieCutting(Practice.QuesTes2, MainTest(Practice.QuesTes2, Practice.AnsTes2, 0), 0, 0, 0, 0);
 
             }
             FirstSort(Practice.QuesTes2, Practice.AnsTes2, dieCutting);
@@ -119,7 +123,7 @@ namespace _2024ProconTemporary
             for (float Match = 0; Match == 100;)
             {
                 IndexCount(Practice.QuesTes2);
-                Practice.QuesTes2 = dieCutting(Practice.QuesTes2, MainTest(Practice.QuesTes2, Practice.AnsTes2, 0), 0, 0, 0, 0);
+                //Practice.QuesTes2 = dieCutting(Practice.QuesTes2, MainTest(Practice.QuesTes2, Practice.AnsTes2, 0), 0, 0, 0, 0);
                 Match = Check(answer, queses);
             }
 
@@ -256,7 +260,7 @@ namespace _2024ProconTemporary
             return 4;
         }
 
-        public static float[,] MainTest(List<List<int>> Ques, List<List<int>> Ans, int N)
+        public static void MainTest(List<List<int>> Ques, List<List<int>> Ans, int N)
         {
             var WantIndex = new List<List<List<int>>>();
             var TypeCanList = new List<List<int>>();
@@ -276,7 +280,6 @@ namespace _2024ProconTemporary
             }
             //Hyoji(WantIndex[1]);
             Console.WriteLine("");
-            return IndexTest(Ques, Ans, WantIndex);
         }
         public static List<int> Search(List<List<int>> Ques, List<List<int>> Ans, List<int> IndexList, int exclusion, int Y)
         {
@@ -357,7 +360,7 @@ namespace _2024ProconTemporary
 
 
         }
-        public static float[,] IndexTest(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> WantTypeIndex)
+        public static void IndexTest(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> WantTypeIndex)
         {
 
             float[,] Test = new float[256, 256];
@@ -383,7 +386,7 @@ namespace _2024ProconTemporary
                 }
             }
 
-            return Test;
+            
         }
 
         public static void Overcalculation(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> WantTypeIndex)
@@ -444,23 +447,23 @@ namespace _2024ProconTemporary
             }
             return null;
         }
-        public static void PatternCount(List<List<int>> Ques, float[][,] PatternList)
+        public static void PatternCount(List<List<int>> Ques, List<List<List<int>>> PatternList)
         {
             for (int i = 0; i < 281; i++)
             {
                 ZeroIndexList.Add(new List<List<int>>());
                 OneIndexList.Add(new List<List<int>>());
-                for (int Y = 0; Y < Pattern.PatternList[i].GetLength(0); Y++)
+                for (int Y = 0; Y < Pattern.PatternList[i].Count; Y++)
                 {
                     ZeroIndexList[i].Add(new List<int>());
                     OneIndexList[i].Add(new List<int>());
-                    for (int X = 0; X < Pattern.PatternList[i].GetLength(1); X++)
+                    for (int X = 0; X < Pattern.PatternList[i][Y].Count; X++)
                     {
-                        if (Pattern.PatternList[i][Y, X] == 0)
+                        if (Pattern.PatternList[i][Y][X] == 0)
                         {
                             ZeroIndexList[i][Y].Add(X);
                         }
-                        else if (Pattern.PatternList[i][Y, X] == 1)
+                        else if (Pattern.PatternList[i][Y][X] == 1)
                         {
                             OneIndexList[i][Y].Add(X);
                         }
@@ -477,9 +480,9 @@ namespace _2024ProconTemporary
                     }
 
                 }
-                if (Pattern.PatternList[i].Length >= Ques.Count)
+                if (Pattern.PatternList[i].Count >= Ques.Count)
                 {
-                    if (Pattern.PatternList[i].GetLength(0) >= Ques[0].Count)
+                    if (Pattern.PatternList[i][0].Count >= Ques[0].Count)
                     {
                         PatternSizeListOver.Add(i);
                         continue;
@@ -539,6 +542,14 @@ namespace _2024ProconTemporary
         }
         public static void Test()
         {
+            Random Random = new Random();
+
+            for (int j = 0;j <10; j++) {
+                for (int i = 0; i < Random.Next(0, 10); i++)
+                {
+                    Console.WriteLine(i);
+                }
+            }
 
         }
 
@@ -567,8 +578,8 @@ namespace _2024ProconTemporary
                         int leftCuttingEffectiveScore;
                         List<List<int>> tempQues = Case.Copy(ques);
                         List<List<int>> tempAns = Case.Copy(ans);
-                        List<List<int>> leftCuttingQues = Case.DieCuttingLeft(tempQues, Pattern.PatternList[useDieIndex], y, x, Pattern.PatternList[useDieIndex].GetLength(1), Pattern.PatternList[useDieIndex].GetLength(0));
-                        List<List<int>> rightCuttingQues = Case.DieCuttingRight(tempQues, Pattern.PatternList[useDieIndex], y, x, Pattern.PatternList[useDieIndex].GetLength(1), Pattern.PatternList[useDieIndex].GetLength(0));
+                        List<List<int>> leftCuttingQues = Case.DieCuttingLeft(tempQues, Pattern.PatternList[useDieIndex], y, x, Pattern.PatternList[useDieIndex][0].Count, Pattern.PatternList[useDieIndex].Count);
+                        List<List<int>> rightCuttingQues = Case.DieCuttingRight(tempQues, Pattern.PatternList[useDieIndex], y, x, Pattern.PatternList[useDieIndex][0].Count, Pattern.PatternList[useDieIndex].Count);
 
                         List<List<int>> leftCuttingCollectPieceArray = CreateCollectPieceArray(leftCuttingQues, tempAns);
                         List<List<int>> rightCuttingCollectPieceArray = CreateCollectPieceArray(rightCuttingQues, tempAns);
