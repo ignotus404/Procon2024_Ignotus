@@ -41,17 +41,17 @@ namespace _2024ProconTemporary
         }
 
 
-        public static  List<List<int>> DieCuttingUP(List<List<int>> queues, float[,] pattern, int PointY, int PointX, int PatternX, int PatternY)
+        public static  List<List<int>> DieCuttingUP(List<List<int>> queues,List<List<int>> pattern, int PointY, int PointX, int PatternX, int PatternY)
         {
             var queuesT = TranslatePos(queues);
-                for (int y = 0; y < pattern.GetLength(1); y++)
+                for (int y = 0; y < pattern[0].Count; y++)
                 {
                     var match = new List<int>();
                     if (y + PointY < queues[0].Count )
                     {
-                        for (int x = pattern.GetLength(0) - 1; x >= 0; x--)
+                        for (int x = pattern.Count - 1; x >= 0; x--)
                         {
-                            if (pattern[x, y] == 1)
+                            if (pattern[x][y] == 1)
                             {
                                 if (x + PointX < queues.Count)
                                 {
@@ -73,19 +73,19 @@ namespace _2024ProconTemporary
             queuesT = TranslatePos(queuesT);
             return queuesT;
         }
-        public static List<List<int>> DieCuttingDown(List<List<int>> queues, float[,] pattern, int PointY, int PointX, int PatternX, int PatternY)
+        public static List<List<int>> DieCuttingDown(List<List<int>> queues, List<List<int>> pattern, int PointY, int PointX, int PatternX, int PatternY)
         {
             var queuesT = TranslatePos(queues);
-            for (int y = 0; y < pattern.GetLength(1); y++)
+            for (int y = 0; y < pattern[0].Count; y++)
             {
                 var match = new List<int>();
-                if (y + PointY < queues[0].Count + pattern.GetLength(1) && y + PointY > queues[0].Count + pattern.GetLength(1))
+                if (y + PointY < queues[0].Count)
                 {
-                    for (int x = pattern.GetLength(0) - 1; x >= 0; x--)
+                    for (int x = pattern.Count - 1; x >= 0; x--)
                     {
-                        if (pattern[x, y] == 1)
+                        if (pattern[x][y] == 1)
                         {
-                            if (x + PointX < queues.Count + pattern.GetLength(0) && x + PointX > queues.Count + pattern.GetLength(0))
+                            if (x + PointX < queues.Count)
                             {
                                 match.Add(queues[x + PointX][y + PointY]);
                                 queuesT[y + PointY].RemoveAt(x + PointX);
@@ -105,16 +105,16 @@ namespace _2024ProconTemporary
             queuesT = TranslatePos(queuesT);
             return queuesT;
         }
-        public static List<List<int>> DieCuttingRight(List<List<int>> queues, float[,] pattern, int PointX, int PointY,int PatternX,int PatternY)
+        public static List<List<int>> DieCuttingRight(List<List<int>> queues, List<List<int>> pattern, int PointX, int PointY,int PatternX,int PatternY)
         {
-            for (int y = 0; y < pattern.GetLength(0); y++)
+            for (int y = 0; y < pattern.Count; y++)
             {
                 var match = new List<int>();
                 if (y + PointY < queues.Count)
                 {
-                    for (int x = pattern.GetLength(1) - 1; x >= 0; x--)
+                    for (int x = pattern[0].Count - 1; x >= 0; x--)
                     {
-                        if (pattern[y, x] == 1)
+                        if (pattern[y][x] == 1)
                         {
                             if (x + PointX < queues[0].Count)
                             {
@@ -135,16 +135,16 @@ namespace _2024ProconTemporary
             }
             return queues;
         }
-        public static List<List<int>> DieCuttingLeft(List<List<int>> queues, float[,] pattern, int PointX, int PointY, int PatternX, int PatternY)
+        public static List<List<int>> DieCuttingLeft(List<List<int>> queues, List<List<int>> pattern, int PointX, int PointY, int PatternX, int PatternY)
         {
-            for (int y = 0; y < pattern.GetLength(1); y++)
+            for (int y = 0; y < pattern.Count; y++)
             {
                 var match = new List<int>();
                 if (y + PointY < queues.Count)
                 {
-                    for (int x = pattern.GetLength(1) - 1; x >= 0; x--)
+                    for (int x = pattern[0].Count - 1; x >= 0; x--)
                     {
-                        if (pattern[y, x] == 1)
+                        if (pattern[y][x] == 1)
                         {
                             if (x + PointX < queues[0].Count)
                             {
