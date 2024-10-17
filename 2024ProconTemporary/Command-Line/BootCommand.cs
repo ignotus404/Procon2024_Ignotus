@@ -30,7 +30,6 @@ namespace _2024ProconTemporary.CommandLine.Commands
             Console.WriteLine("問題データを取得しています...");
             HttpClient client = Networking.CreateClient();
             var problemData = Networking.GetProblemData(client);
-
             if (problemData == null)
             {
                 Console.WriteLine("エラー: ProblemDataのダウンロードに失敗しました!");
@@ -39,20 +38,39 @@ namespace _2024ProconTemporary.CommandLine.Commands
             }
             Console.WriteLine("Done!");
 
-            Console.WriteLine("Converting Problem Data...");
             // 問題データ、回答データをstringの配列からintの2次元配列に変換する
+            Console.WriteLine("Converting Problem Data...");
             ReadableProblemData convertedProblemData = new ReadableProblemData(problemData);
             Console.WriteLine("Done!");
-
             convertedProblemData.Print();
 
+            // 回答データの初期化
             AnswerData answerData = Answer.Create();
+
+            // 手動操作モード用の抜き型を列挙したリストを作成
+            List<ReadablePatternData> dieList = CreateDieList(convertedProblemData);
+
+            // デバッグ用
+            Console.WriteLine("DieList:");
+            foreach (var die in dieList)
+            {
+                Console.WriteLine($"P: {die.P}");
+                Console.WriteLine($"Width: {die.Width}");
+                Console.WriteLine($"Height: {die.Height}");
+                Console.WriteLine("Cells:");
+                foreach (var cell in die.Cells)
+                {
+                    Console.WriteLine(string.Join(" ", cell));
+                }
+            }
+            // ここまで
+
 
             // 手動で回答を作成するモードに移行する
             if (args.isManual)
             {
                 Console.WriteLine("手動回答モードに移行します");
-                ManualMode(convertedProblemData);
+                ManualMode(convertedProblemData, dieList);
             }
 
             else
@@ -67,9 +85,8 @@ namespace _2024ProconTemporary.CommandLine.Commands
                 // 回答結果を表示する(間違っている場所、かかった手数など) 未実装
                 // CompareAnswers(convertedProblemData, );
 
-                // 手動で回答を作成するモードに移行する
-                Console.WriteLine("手動回答モードに移行します");
-                answerData = ManualMode(convertedProblemData);
+
+
 
                 // これで提出するか聞く
                 Console.WriteLine("これで提出しますか? (Y/n)");
@@ -79,24 +96,110 @@ namespace _2024ProconTemporary.CommandLine.Commands
                 {
                     // 手動で回答を作成するモードに移行する
                     Console.WriteLine("手動回答モードに移行します");
-                    answerData = ManualMode(convertedProblemData);
+                    answerData = ManualMode(convertedProblemData, dieList);
                 }
 
                 // 回答を提出する
                 Console.WriteLine("回答を提出しています...");
                 Networking.SendAnswerData(client, answerData);
                 Console.WriteLine("Done!");
-
             }
         }
 
+        /// <summary>
+        /// 手動操作モード用の抜き型を列挙したリストを作成
+        /// </summary>
+        /// <param name="problemData">使用する問題データ</param>
+        /// <returns>一般抜き型と特殊抜き型をあわせた二次元配列の配列</returns>
+        List<ReadablePatternData> CreateDieList(in ReadableProblemData problemData)
+        {
+            List<ReadablePatternData> dieList = new List<ReadablePatternData>();
+            // 一般抜き型を追加
+            dieList.Add(new ReadablePatternData(1, 1, 1, new List<List<int>> { new List<int> { 1 } }));
+            for (int i = 2; i < 257; i *= 2)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    List<List<int>> cell = new List<List<int>>();
+                    switch (j)
+                    {
+                        case 0:
+                            cell = CreateGeneralCuttingDieTypeI(i);
+                            break;
+                        case 1:
+                            cell = CreateGeneralCuttingDieTypeII(i);
+                            break;
+                        case 2:
+                            cell = CreateGeneralCuttingDieTypeIII(i);
+                            break;
+                    }
+                    dieList.Add(new ReadablePatternData(dieList.Count + 1, i, i, cell));
+                }
+            }
 
+            // 特殊抜き型を追加
+            for (int i = 0; i < problemData.General.N; i++)
+            {
+                dieList.Add(problemData.General.Patterns[i]);
+            }
+            return dieList;
+        }
+
+        List<List<int>> CreateGeneralCuttingDieTypeI(int size)
+        {
+            List<List<int>> die = new List<List<int>>();
+            for (int y = 0; y < size; y++)
+            {
+                List<int> row = new List<int>();
+                for (int x = 0; x < size; x++)
+                {
+                    row.Add(1);
+                }
+                die.Add(row);
+            }
+            return die;
+        }
+
+        List<List<int>> CreateGeneralCuttingDieTypeII(int size)
+        {
+            List<List<int>> die = new List<List<int>>();
+            for (int y = 0; y < size; y++)
+            {
+                List<int> row = new List<int>();
+                for (int x = 0; x < size; x++)
+                {
+                    if (y % 2 == 0) row.Add(1);
+                    else row.Add(0);
+                }
+                die.Add(row);
+            }
+
+            return die;
+        }
+
+        List<List<int>> CreateGeneralCuttingDieTypeIII(int size)
+        {
+            List<List<int>> die = new List<List<int>>();
+            for (int y = 0; y < size; y++)
+            {
+                List<int> row = new List<int>();
+                for (int x = 0; x < size; x++)
+                {
+                    if (x % 2 == 0) row.Add(1);
+                    else row.Add(0);
+                }
+                die.Add(row);
+            }
+            return die;
+        }
         /// <summary>
         /// 手動で回答を作成するモードに移行する 未実装
         /// </summary>
         /// <param name="problemData">使用する問題データ</param>
-        /// <returns></returns>
-        AnswerData ManualMode(ReadableProblemData problemData, List<List<int>> board = null)
+        /// <param name="dieList">使用する抜き型のリスト</param>
+        /// <param name="board">初期盤面</param>
+        /// <returns>手動操作モードで作成した回答データ</returns>
+        AnswerData ManualMode(ReadableProblemData problemData, IReadOnlyList<ReadablePatternData> dieList, List<List<int>> board = null)
         {
 
             AnswerData answerData = Answer.Create();
@@ -115,7 +218,7 @@ namespace _2024ProconTemporary.CommandLine.Commands
             // キー入力を受付、回答を作成する
             while (true)
             {
-                ShowNowBoard(problemData, board, cursorPosition.left, cursorPosition.top, useDieIndex, diePosition.x, diePosition.y);
+                ShowNowBoard(problemData, dieList, board, cursorPosition.left, cursorPosition.top, useDieIndex, diePosition.x, diePosition.y);
                 Console.WriteLine("Please press key...");
                 ConsoleKeyInfo key = Console.ReadKey(true);
                 if (isMovingMode) Console.WriteLine("抜いたあとに詰める方向を選択してください");
@@ -125,23 +228,30 @@ namespace _2024ProconTemporary.CommandLine.Commands
                         Console.WriteLine("これで提出しますか? (Y/n)");
                         string input = Console.ReadLine() ?? "";
                         if (input == "N" || input == "n") break;
-                        else return answerData;
+                        else if (input == "Y" || input == "y" || input == "") return answerData;
+                        break;
 
                     // 抜く場所の移動
                     case ConsoleKey.W:
                         if (isMovingMode)
                         {
                             history.Add(board);
-                            board = Case.DieCuttingUP(board, ConvertCellsToFloatArray(problemData.General.Patterns[useDieIndex].Cells), diePosition.x, diePosition.y, 0, 0);
+                            board = Case.DieCuttingUP(board, dieList[useDieIndex].Cells, diePosition.x, diePosition.y, 0, 0);
+                            answerData.N++;
+                            answerData.Ops.Add(new AnswerData.OperationData { P = useDieIndex, X = diePosition.x, Y = diePosition.y, S = AnswerData.OperationData.Side.Up });
+                            isMovingMode = !isMovingMode;
                         }
-                        else if (diePosition.y > -(problemData.General.Patterns[useDieIndex].Height)) diePosition.y--;
+                        else if (diePosition.y > -(dieList[useDieIndex].Height - 1)) diePosition.y--;
                         break;
 
                     case ConsoleKey.S:
                         if (isMovingMode)
                         {
                             history.Add(board);
-                            board = Case.DieCuttingDown(board, ConvertCellsToFloatArray(problemData.General.Patterns[useDieIndex].Cells), diePosition.x, diePosition.y, 0, 0);
+                            board = Case.DieCuttingDown(board, dieList[useDieIndex].Cells, diePosition.x, diePosition.y, 0, 0);
+                            answerData.N++;
+                            answerData.Ops.Add(new AnswerData.OperationData { P = useDieIndex, X = diePosition.x, Y = diePosition.y, S = AnswerData.OperationData.Side.Down });
+                            isMovingMode = !isMovingMode;
                         }
                         else if (diePosition.y < problemData.Board.Height - 1) diePosition.y++;
                         break;
@@ -150,27 +260,33 @@ namespace _2024ProconTemporary.CommandLine.Commands
                         if (isMovingMode)
                         {
                             history.Add(board);
-                            board = Case.DieCuttingLeft(board, ConvertCellsToFloatArray(problemData.General.Patterns[useDieIndex].Cells), diePosition.x, diePosition.y, 0, 0);
+                            board = Case.DieCuttingLeft(board, dieList[useDieIndex].Cells, diePosition.x, diePosition.y, 0, 0);
+                            answerData.N++;
+                            answerData.Ops.Add(new AnswerData.OperationData { P = useDieIndex, X = diePosition.x, Y = diePosition.y, S = AnswerData.OperationData.Side.Left });
+                            isMovingMode = !isMovingMode;
                         }
-                        else if (diePosition.x > -(problemData.General.Patterns[useDieIndex].Width)) diePosition.x--;
+                        else if (diePosition.x > -(dieList[useDieIndex].Width - 1)) diePosition.x--;
                         break;
 
                     case ConsoleKey.D:
                         if (isMovingMode)
                         {
                             history.Add(board);
-                            board = Case.DieCuttingRight(board, ConvertCellsToFloatArray(problemData.General.Patterns[useDieIndex].Cells), diePosition.x, diePosition.y, 0, 0);
+                            board = Case.DieCuttingRight(board, dieList[useDieIndex].Cells, diePosition.x, diePosition.y, 0, 0);
+                            answerData.N++;
+                            answerData.Ops.Add(new AnswerData.OperationData { P = useDieIndex, X = diePosition.x, Y = diePosition.y, S = AnswerData.OperationData.Side.Right });
+                            isMovingMode = !isMovingMode;
                         }
                         else if (diePosition.x < problemData.Board.Width - 1) diePosition.x++;
                         break;
 
                     // 型の選択
                     case ConsoleKey.LeftArrow:
-                        useDieIndex = (useDieIndex - 1 + problemData.General.N) % problemData.General.N;
+                        useDieIndex = (useDieIndex - 1 + dieList.Count) % dieList.Count;
                         break;
 
                     case ConsoleKey.RightArrow:
-                        useDieIndex = (useDieIndex + 1) % problemData.General.N;
+                        useDieIndex = (useDieIndex + 1) % dieList.Count;
                         break;
 
                     // 決定
@@ -187,43 +303,54 @@ namespace _2024ProconTemporary.CommandLine.Commands
 
                 }
 
+                // デバッグ用
+                Console.WriteLine($"useDieIndex: {useDieIndex}");
+                Console.WriteLine($"DiePosition: {diePosition.x}, {diePosition.y}");
+                Console.WriteLine($"Cursor: {cursorPosition.left}, {cursorPosition.top}");
+                // ここまで
+
             }
         }
 
-        public float[,] ConvertCellsToFloatArray(IList<List<int>> cells)
-        {
-            int rows = cells.Count;
-            int cols = cells[0].Count;
-            float[,] array = new float[rows, cols];
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < cols; j++)
-                {
-                    array[i, j] = (float)cells[i][j];
-                }
-            }
-
-            return array;
-        }
-
-        void ShowNowBoard(ReadableProblemData problemData, List<List<int>> board, int cursorLeft, int cursorTop, int useDieIndex, int diePositionX, int diePositionY)
+        void ShowNowBoard(ReadableProblemData problemData, IReadOnlyList<ReadablePatternData> dieList, List<List<int>> board, int cursorLeft, int cursorTop, int useDieIndex, int diePositionX, int diePositionY)
         {
             Console.SetCursorPosition(cursorLeft, cursorTop);
             for (int y = 0; y < board.Count; y++)
             {
                 for (int x = 0; x < board[y].Count; x++)
                 {
-                    if (y > diePositionY && y < diePositionY + problemData.General.Patterns[useDieIndex].Height && x > diePositionX && x < diePositionX + problemData.General.Patterns[useDieIndex].Width)
+                    try
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.Write(board[y][x]);
-                        Console.ResetColor();
+                        if
+                        (
+                        y >= diePositionY &&
+                        y < diePositionY + dieList[useDieIndex].Height &&
+                        x >= diePositionX &&
+                        x < diePositionX + dieList[useDieIndex].Width &&
+                        dieList[useDieIndex].Cells[y - diePositionY][x - diePositionX] == 1
+                        )
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Write(board[y][x]);
+                            Console.ResetColor();
+                        }
+                        else Console.Write(board[y][x]);
                     }
-                    else Console.Write(board[y][x]);
+                    catch (ArgumentOutOfRangeException e)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Error");
+                        Console.WriteLine(e.Message);
+                        Console.WriteLine($"y: {y}, x: {x}");
+                        Console.WriteLine($"diePositionY: {diePositionY}, diePositionX: {diePositionX}");
+                        Console.WriteLine($"y - diePositionY: {y - diePositionY}, x - diePositionX: {x - diePositionX}");
+                        Console.WriteLine($"dieList[useDieIndex].Height: {dieList[useDieIndex].Height}, dieList[useDieIndex].Width: {dieList[useDieIndex].Width}");
+                    }
+
                 }
                 Console.WriteLine();
             }
+
         }
         /// <summary>
         /// 回答結果を表示する

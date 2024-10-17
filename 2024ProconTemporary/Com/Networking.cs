@@ -74,12 +74,21 @@ public static class Networking
         AddTokenHeader(ref req);
         using var jsonStream = new MemoryStream();
         await JsonSerializer.SerializeAsync(jsonStream, answer);
-        var json = jsonStream.ToString()!;
+        jsonStream.Position = 0;
+        using var reader = new StreamReader(jsonStream);
+        var json = await reader.ReadToEndAsync();
         req.Content = new StringContent(json, Encoding.UTF8, "application/json");
         try
         {
             var res = await client.SendAsync(req);
-            if (res.StatusCode.Equals(HttpStatusCode.OK)) return true;
+            if (res.StatusCode.Equals(HttpStatusCode.OK))
+            {
+                // デバッグ用
+                var body = await res.Content.ReadAsStringAsync();
+                Console.WriteLine(body);
+                // ここまで
+                return true;
+            }
             await Console.Error.WriteLineAsync($"Failed to send answer data. Status Code is {res.StatusCode}");
             return false;
         }
