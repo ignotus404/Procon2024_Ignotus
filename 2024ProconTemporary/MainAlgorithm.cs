@@ -57,6 +57,20 @@ namespace _2024ProconTemporary
 
             var PatternList = new List<List<List<int>>>();
             var K = readableProblemData.General.Patterns.Count;
+            int i;
+            double j;
+            int k = 1;
+            PatternList.Add(new List<List<int>>());
+            PatternList[0].Add(new List<int>());
+            PatternList[0][0].Add(1);
+            for (i = 1, j = 2; j <= 256; i++, j = Math.Pow(2, i))
+            {
+                for (int l = 1; k <= 3 * i; k++, l++)
+                {
+                    PatternList.Add(new List<List<int>>());
+                    PatternList[k] = Pattern.PatternAssignment(PatternList[k], l, i, i);
+                }
+            }
             foreach (var p in readableProblemData.General.Patterns)
             {
                 PatternList.Add(new List<List<int>>());
