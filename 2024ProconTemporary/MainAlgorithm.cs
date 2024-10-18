@@ -31,17 +31,17 @@ namespace _2024ProconTemporary
         public static int Ymax = 0;
         public static int Xmax = 0;
 
-        public static void Main()
-        {
-            Pattern.Patterns();
-            Practice.Practices();
-            //dieCutting = Case.DieCuttingUP;
-            //PatternDifferenceValue(Pattern.PatternList);
-            //CalculationTest(0,0);
-            //FirstSort(Case.TranslatePos(Practice.QuesTes),Practice.AnsTes, dieCutting);
-            CalculationTest(Practice.QuesTes, Practice.AnsTes);
-            Test();
-        }
+        // public static void Main()
+        // {
+        //     Pattern.Patterns();
+        //     Practice.Practices();
+        //     //dieCutting = Case.DieCuttingUP;
+        //     //PatternDifferenceValue(Pattern.PatternList);
+        //     //CalculationTest(0,0);
+        //     //FirstSort(Case.TranslatePos(Practice.QuesTes),Practice.AnsTes, dieCutting);
+        //     CalculationTest(Practice.QuesTes, Practice.AnsTes);
+        //     Test();
+        // }
         public (AnswerData, List<List<int>>) Calculation(ProblemData problemData)
         {
             int N = 1000;
