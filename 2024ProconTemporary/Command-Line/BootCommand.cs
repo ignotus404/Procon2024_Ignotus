@@ -50,21 +50,6 @@ namespace _2024ProconTemporary.CommandLine.Commands
             // 手動操作モード用の抜き型を列挙したリストを作成
             List<ReadablePatternData> dieList = CreateDieList(convertedProblemData);
 
-            // デバッグ用
-            Console.WriteLine("DieList:");
-            foreach (var die in dieList)
-            {
-                Console.WriteLine($"P: {die.P}");
-                Console.WriteLine($"Width: {die.Width}");
-                Console.WriteLine($"Height: {die.Height}");
-                Console.WriteLine("Cells:");
-                foreach (var cell in die.Cells)
-                {
-                    Console.WriteLine(string.Join(" ", cell));
-                }
-            }
-            // ここまで
-
 
             // 手動で回答を作成するモードに移行する
             if (args.isManual)
@@ -296,9 +281,24 @@ namespace _2024ProconTemporary.CommandLine.Commands
 
                     case ConsoleKey.H:
                         Console.WriteLine("Help");
+                        Console.WriteLine("W: 上に移動");
+                        Console.WriteLine("S: 下に移動");
+                        Console.WriteLine("A: 左に移動");
+                        Console.WriteLine("D: 右に移動");
+                        Console.WriteLine("LeftArrow: ひとつ後型を選択");
+                        Console.WriteLine("RightArrow: ひとつ前の型を選択");
+                        Console.WriteLine("Enter: 抜く/詰めるを決定");
+                        Console.WriteLine("Backspace: 一手戻る");
                         break;
 
                     case ConsoleKey.Backspace:
+                        if (history.Count == 0) break;
+                        board = history[history.Count - 1];
+                        answerData.N--;
+                        answerData.Ops.RemoveAt(answerData.N);
+                        history.RemoveAt(history.Count - 1);
+                        Console.WriteLine("一手戻りました");
+                        // デバッグ用
                         break;
 
                 }
