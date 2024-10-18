@@ -34,7 +34,7 @@ namespace _2024ProconTemporary
             PatternList[256].Add(new List<int>());
             PatternList[256][0].Add(1);
 
-            
+            Console.WriteLine(PatternList.Count);
             for (i = 1, j = 2; j <= 256; i++, j = Math.Pow(2, i))
             { 
                 for (int l = 1; k <= 3 * i; k++, l++)
@@ -43,10 +43,12 @@ namespace _2024ProconTemporary
                     PatternList[k + 256] = PatternAssignment(PatternList[k + 256], l,i,i);
                 }
             }
-            
+            Console.WriteLine(PatternList.Count);
+
         }
+
         
-        
+
 
         static List<List<int>> PatternAssignment(List<List<int>> PatternList, int Type, int Warp,int Side)
         {
