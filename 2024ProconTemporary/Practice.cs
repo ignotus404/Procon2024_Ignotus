@@ -96,7 +96,7 @@ namespace _2024ProconTemporary
         public static void Practices()
         {
             pieceX = 32;
-            pieceY = 1;
+            pieceY = 32;
             Question();
             Answer(AnsTes);
         }

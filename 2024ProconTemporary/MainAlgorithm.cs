@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace _2024ProconTemporary
 {
 
@@ -34,24 +35,26 @@ namespace _2024ProconTemporary
         {
             Pattern.Patterns();
             Practice.Practices();
-            DieCutting dieCutting;
-            dieCutting = Case.DieCuttingUP;
-            PatternDifferenceValue(Pattern.PatternList);
+            //dieCutting = Case.DieCuttingUP;
+            //PatternDifferenceValue(Pattern.PatternList);
             //CalculationTest(0,0);
             //FirstSort(Case.TranslatePos(Practice.QuesTes),Practice.AnsTes, dieCutting);
-
+            CalculationTest(Practice.QuesTes, Practice.AnsTes);
             Test();
         }
         public (AnswerData,List<List<int>>) Calculation(ProblemData problemData)
         {
             int N = 1000;
             int MaxN = 0;
+            var MaxOps = new List<AnswerData.OperationData>();
+            var Ops = new List<AnswerData.OperationData>();
             DieCutting dieCutting;
             ReadableProblemData readableProblemData = new ReadableProblemData(problemData);
             Ymax = problemData.Board.Height;
             Xmax = problemData.Board.Width;
             var queses = Case.Copy(readableProblemData.Board.Start.ToList());
             var answer = Case.Copy(readableProblemData.Board.Goal.ToList());
+
             var PatternList = new List<List<List<int>>>();
             var K = readableProblemData.General.Patterns.Count;
             foreach (var p in readableProblemData.General.Patterns)
@@ -59,6 +62,8 @@ namespace _2024ProconTemporary
                 PatternList.Add(new List<List<int>>());
                 PatternList[p.P] = Case.Copy(p.Cells.ToList());
             }
+            PatternCount(queses, Pattern.PatternList);
+            PatternDifferenceValue(PatternList);
             for (int direction = 0; direction < 4; direction++)
             {
                 MaxN = 0;
@@ -70,7 +75,7 @@ namespace _2024ProconTemporary
                 {
                     dieCutting = Case.DieCuttingDown;
                 }
-                var Items = FirstSort(queses, answer, dieCutting);
+                var Items = FirstSort(queses, answer, dieCutting,Ops,PatternList);
                 queses = Items.Item1;
                 N = Items.Item2;
                 if (direction == 0 || direction == 3)
@@ -81,79 +86,88 @@ namespace _2024ProconTemporary
                 {
                     dieCutting = Case.DieCuttingRight;
                 }
-                for (int i = 0; i < 10; i++)
+                for (float Match = 0; Match < 95;)
                 {
                     IndexCount(queses, Xmax, Ymax);
-                    queses = MainTest(queses, answer, 0, dieCutting);
+                    queses = MainTest(queses, answer, 0, dieCutting,Ops,PatternList);
                     N++;
+                    Match =  Check(queses,answer,Xmax,Ymax);
                 }
+                
                 if (MaxN > N)
                 {
                     MaxN = N;
-                    
+                    MaxOps = Ops;
                 }
             }
             return (new AnswerData
             {
                 N = MaxN,
-                Ops = new List<AnswerData.OperationData>()
+                Ops = Ops
             },
             queses);
         }
-        public static void CalculationTest(int direction, int MaxN)
+        public static void CalculationTest(List<List<int>> queses, List<List<int>> answer)
         {
-            int N = 0;
-            Ymax = Practice.AnsTes2.Count;
-            Xmax = Practice.AnsTes2[0].Count;
+            int N = 1000;
+            int MaxN = 0;
+            var MaxOps = new List<AnswerData.OperationData>();
             var Ops = new List<AnswerData.OperationData>();
-            var answerS = QuestionShunting(Practice.QuesTes, Practice.AnsTes,Xmax,Ymax);
-
-            PatternCount(Practice.QuesTes2, Pattern.PatternList);
+            Ymax = queses.Count;
+            Xmax = answer[0].Count;
+            var answerS = QuestionShunting(queses, answer, Xmax, Ymax);
+            PatternCount(queses, Pattern.PatternList);
+            PatternDifferenceValue(Pattern.PatternList);
             DieCutting dieCutting;
-            if (direction == 0)
-            {
-                dieCutting = Case.DieCuttingUP;
-            }
-            else if (direction == 1)
-            {
-                dieCutting = Case.DieCuttingDown;
 
-            }
-            else if (direction == 2)
+            for (int direction = 0; direction < 4; direction++)
             {
-                dieCutting = Case.DieCuttingLeft;
+                MaxN = 0;
+                if (direction == 0 || direction == 1)
+                {
+                    dieCutting = Case.DieCuttingUP;
+                }
+                else
+                {
+                    dieCutting = Case.DieCuttingDown;
+                }
+                var Items = FirstSort(queses, answer, dieCutting, Ops,Pattern.PatternList);
+                queses = Items.Item1;
+                N = Items.Item2;
+                if (direction == 0 || direction == 3)
+                {
+                    dieCutting = Case.DieCuttingLeft;
+                }
+                else
+                {
+                    dieCutting = Case.DieCuttingRight;
+                }
+                
+                    IndexCount(queses, Xmax, Ymax);
+                    queses = MainTest(queses, answer, 0, dieCutting, Ops,Pattern.PatternList);
+                    N++;
+                   //var Match = Check(queses, answer, Xmax, Ymax);
+                
+                Console.WriteLine(MaxN);
+                if (MaxN > N)
+                {
+                    MaxN = N;
+                    MaxOps = Ops;
+                }
             }
-            else
-            {
-                dieCutting = Case.DieCuttingRight;
-            }
-            for (int i = 0; i < 10; i++)
-            {
-                IndexCount(Practice.QuesTes2,Xmax,Ymax);
-                //Practice.QuesTes2 = dieCutting(Practice.QuesTes2, MainTest(Practice.QuesTes2, Practice.AnsTes2, 0), 0, 0, 0, 0);
-
-            }
-            //FirstSort(Practice.QuesTes2, Practice.AnsTes2, dieCutting);
-            Hyoji(ZeroIndexList[255]);
-             MainTest(Practice.QuesTes2, Practice.AnsTes2, 0,dieCutting);
-            //Hyoji(Practice.queues);
-            if (MaxN > N)
-            {
-                MaxN = N;
-                direction += 1;
-            }
+        
         }
-        static (List<List<int>>,int) FirstSort(List<List<int>> queses, List<List<int>> answer, DieCutting dieCutting)
+        static (List<List<int>>,int) FirstSort(List<List<int>> queses, List<List<int>> answer, DieCutting dieCutting, List<AnswerData.OperationData> Ops, List<List<List<int>>> PatternList)
         {
             int N = 0;
             var answerT = QuestionShunting(queses, answer,Xmax,Ymax);
-            for (float Match = 0; Match > 95;)
-            {
-                IndexCount(Practice.QuesTes2,Xmax,Ymax);
-                queses = MainTest(queses, answerT, 0,dieCutting);
-                Match = Check(answer, queses,Xmax,Ymax);
+            
+                IndexCount(queses,Xmax,Ymax);
+                queses = MainTest(queses, answerT, 0,dieCutting,Ops,PatternList);
+               
+               // Match = Check(answer, queses,Xmax,Ymax);
                 N++;
-            }
+            
             return (queses,N);
 
         }
@@ -289,7 +303,7 @@ namespace _2024ProconTemporary
             return 4;
         }
 
-        static List<List<int>> MainTest(List<List<int>> queses, List<List<int>> answer, int N ,DieCutting dieCutting)
+        static List<List<int>> MainTest(List<List<int>> queses, List<List<int>> answer, int N ,DieCutting dieCutting, List<AnswerData.OperationData> Ops, List<List<List<int>>> PatternList)
         {
             var WantIndex = new List<List<List<int>>>();
             var TypeCanList = new List<List<int>>();
@@ -305,11 +319,20 @@ namespace _2024ProconTemporary
                 Hyoji(WantIndex[1]);
                 NextSearch(queses, answer, WantIndex, WantIndex[0][Y].Count + WantIndex[1][Y].Count + 1, Y);
             }
-            int i = Patterncalculation(queses,answer,WantIndex);
-
-            Console.WriteLine(Pattern.PatternList.Count);
+            var i = Patterncalculation(queses,answer,WantIndex);
+            queses = dieCutting(queses,PatternList[i[0]], i[1], i[2], 0, 0);
+            var S = SCheck(dieCutting);
+            var operationData = new AnswerData.OperationData
+            {
+                P = i[0],
+                X = i[1],
+                Y = i[2],
+                S = S
+            };
+            Ops.Add(operationData);
+            //Console.WriteLine(Pattern.PatternList.Count);
             //Hyoji(WantIndex[1]);
-            return dieCutting(queses, Pattern.PatternList[i], 0, 0, 0, 0);
+            return queses;
         }
         public static List<int> Search(List<List<int>> Ques, List<List<int>> Ans, List<int> IndexList, int exclusion, int Y)
         {
@@ -323,7 +346,7 @@ namespace _2024ProconTemporary
                 //Console.WriteLine(Ans[Y][Number]);
                 if (QuesNumberIndex == 0)
                 {
-                    if (NumberIndexList[Ans[Y][Number]][Y].Count - 1 != 0)
+                    if (NumberIndexList[Ans[Y][Number]][Y].Count - 1 > 0)
                     {
                         if (NumberIndexList[Ans[Y][Number]][Y][NumberIndexList[Ans[Y][Number]][Y].Count - 1] == 0)
                         {
@@ -353,7 +376,7 @@ namespace _2024ProconTemporary
                     int QuesNumberIndex = NumberIndexList[Ans[Y][Number]][Y].FindLast(item => item < N);
                     if (QuesNumberIndex == 0)
                     {
-                        if (NumberIndexList[Ans[Y][Number]][Y].Count - 1 != 0)
+                        if (NumberIndexList[Ans[Y][Number]][Y].Count - 1 > 0)
                         {
                             if (NumberIndexList[Ans[Y][Number]][Y][NumberIndexList[Ans[Y][Number]][Y].Count - 1] == 0)
                             {
@@ -396,6 +419,26 @@ namespace _2024ProconTemporary
             }
             return (MaxTypeEvaluationValueListSide, MaxTypeEvaluationValueListWarp); 
         }
+        static AnswerData.OperationData.Side SCheck(DieCutting dieCutting)
+        {
+            if(dieCutting == Case.DieCuttingUP)
+            {
+                return AnswerData.OperationData.Side.Up;
+                
+            }
+            else if (dieCutting == Case.DieCuttingDown)
+            {
+                return AnswerData.OperationData.Side.Down;
+            }
+            else if (dieCutting == Case.DieCuttingLeft)
+            {
+                return AnswerData.OperationData.Side.Left;
+            }
+            else
+            {
+                return AnswerData.OperationData.Side.Right;
+            }
+        }
         public static void IndexTest(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> WantTypeIndex)
         {
 
@@ -429,37 +472,89 @@ namespace _2024ProconTemporary
         {
 
         }
-        public static int Patterncalculation(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> WantTypeIndex) 
+        public static List<int> Patterncalculation(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> WantTypeIndex) 
         {
-
+            int ListNumber = -1;
+            var ListNumberList = new List<int>();
+            var WantIndexDifferenceList = WantIndexDifferenceValue(WantTypeIndex, 0); 
             //横と縦の期待値
             //var X = 0;
             foreach (var i in PatternSizeListOver)
             {
                 for (int Y = 0; Y < Ans.Count; Y++)
                 {
-                    var WantIndexDifferenceList = WantIndexDifferenceValue(WantTypeIndex, 0);
+                    
                     for (var X = 0; WantIndexDifferenceList[Y].Count < PatternZeroDifferenceList[i][Y][X].Count; X++)
                     {
-                        if(PatternZeroDifferenceList[i][Y][X].IndexOf(i => i < 0) != 0)
-                        {
-                        
-                        
-                        }
-                        for (var MaxX = WantIndexDifferenceList[Y][WantIndexDifferenceList[Y].Count -1]; WantTypeIndex[0][Y].Count < PatternZeroDifferenceList[i][Y][X].Count; MaxX--)
-                        {
+                      if(PatternZeroDifferenceList[i][Y][X].Find(item => item == WantIndexDifferenceList[Y][WantIndexDifferenceList.Count - 1]) != 0)
+                      {
+                            var LastNumberList = PatternZeroDifferenceList[i][Y][X].FindAll(item => item == WantIndexDifferenceList[Y][WantIndexDifferenceList.Count - 1] && item > WantIndexDifferenceList[Y].Count );
+                            foreach (var LastNumberIndex in LastNumberList)
+                            {
+                                for (var MaxX = WantIndexDifferenceList.Count -2; 0 <= MaxX; MaxX--)
+                                {
+                                    if (PatternZeroDifferenceList[i][Y][X].Contains(WantIndexDifferenceList[Y][MaxX]) == false)
+                                    {
 
-
-                        }
+                                        break;
+                                    }
+                                    if( MaxX -1 < 0)
+                                    {
+                                        ListNumberList.Add(i);
+                                        ListNumberList.Add(LastNumberIndex - WantIndexDifferenceList.Count -1);
+                                        ListNumberList.Add(Y);
+                                    }
+                                    
+                                }
+                            }
+                       }
+                      else
+                      {
+                            continue;
+                      }
+                      
+                       
                     }
 
                     //基準評価値　→　見つかる　→　よりよいものさがす　
                     //基準評価値　→　見つからん　→　方向どんくらい抜けるか試して、1同様に評価値　
 
                 }
+
             }
-            var j = 0;
-            return j;
+            ListNumberList.Add(0);
+            ListNumberList.Add(0);
+            ListNumberList.Add(0);
+            
+            //EvolusionValue();
+            return ListNumberList;
+        }
+        public static int EvolusionValue(List<int> ListNumberList)
+        {
+            int MAxPoint = 0;
+           /* for(int i = 0; i < ListNumberList.Count; i+=3)
+            {
+                for(int X = ListNumberList[i +1 ]; X < )
+                {
+
+                }
+            }
+           */
+            return 0;
+        }
+        public static int  Not(List<List<int>> WantIndexDifferenceList)
+        {
+            return 0;
+        }
+        public static int Motto(List<List<int>> WantIndexDifferenceList)
+        {
+            //基準の1を数えて超えたやつのみの評価値
+            for(int i = 0; i <  281;i++)
+            {
+
+            }
+
+            return 0;
         }
         public static List<List<int>> WantIndexDifferenceValue(List<List<List<int>>> WantTypeIndex, int i)
         {
@@ -474,41 +569,49 @@ namespace _2024ProconTemporary
             }
             return List;
         }
-        public static void PatternDifferenceValue( List<List<List<int>>> PatternList)
+        
+        public static void PatternDifferenceValue(List<List<List<int>>> PatternList)
         {
             //横と縦の期待値
             //var X = 0;
-            
+
             for (int i = 0; i < PatternList.Count; i++)
             {
                 PatternZeroDifferenceList.Add(new List<List<List<int>>>());
                 for (int Y = 0; Y < ZeroIndexList[i].Count; Y++)
                 {
                     PatternZeroDifferenceList[i].Add(new List<List<int>>());
+                    PatternZeroDifferenceList[i][Y].Add(new List<int>());
+                    for (int IntervalX = 1; IntervalX  < ZeroIndexList[i][Y].Count; IntervalX++)
+                    {
 
-                    for (int X = 0; X < ZeroIndexList[i][Y].Count; X++)
+                        PatternZeroDifferenceList[i][Y][0].Add(ZeroIndexList[i][Y][IntervalX] - ZeroIndexList[i][Y][0]);
+                    }
+                    for (int X = 1; X < PatternZeroDifferenceList[i][Y][0].Count ; X++)
                     {
                         PatternZeroDifferenceList[i][Y].Add(new List<int>());
-                        for (int IntervalX = 1; IntervalX + X < ZeroIndexList[i][Y].Count; IntervalX++)
-                        {
-
-                            PatternZeroDifferenceList[i][Y][X].Add(ZeroIndexList[i][Y][X + IntervalX] - ZeroIndexList[i][Y][X]);
-                        }
+                        var Number = ZeroIndexList[i][Y][X] - ZeroIndexList[i][Y][X -1];
+                        PatternZeroDifferenceList[i][Y].Add(PatternZeroDifferenceList[i][Y][X -1].Select(item => item - Number).ToList());
+                        PatternZeroDifferenceList[i][Y].RemoveAt(0);
                     }
                 }
                 PatternOneDifferenceList.Add(new List<List<List<int>>>());
                 for (int Y = 0; Y < OneIndexList[i].Count; Y++)
                 {
                     PatternOneDifferenceList[i].Add(new List<List<int>>());
+                    PatternOneDifferenceList[i][Y].Add(new List<int>());
+                    for (int IntervalX = 1; IntervalX< OneIndexList[i][Y].Count; IntervalX++)
+                    {
 
-                    for (int X = 0; X < OneIndexList[i][Y].Count; X++)
+                        PatternOneDifferenceList[i][Y][0].Add(OneIndexList[i][Y][IntervalX] - OneIndexList[i][Y][0]);
+                    }
+                    for (int X = 1; X < PatternOneDifferenceList[i][Y][0].Count; X++)
                     {
                         PatternOneDifferenceList[i][Y].Add(new List<int>());
-                        for (int IntervalX = 1; IntervalX + X < OneIndexList[i][Y].Count; IntervalX++)
-                        {
+                        var Number = OneIndexList[i][Y][X] - OneIndexList[i][Y][X - 1];
+                        PatternOneDifferenceList[i][Y].Add(PatternOneDifferenceList[i][Y][X -1].Select(item => item -Number).ToList());
+                        PatternOneDifferenceList[i][Y].RemoveAt(0);
 
-                            PatternZeroDifferenceList[i][Y][X].Add(OneIndexList[i][Y][X + IntervalX] - OneIndexList[i][Y][X]);
-                        }
                     }
                 }
             }
@@ -516,21 +619,8 @@ namespace _2024ProconTemporary
 
 
         }
-        
 
-        public static List<List<List<int>>> PatternCopy(List<List<int>> queses, float[][,] PatternList)
-        {
-            var PatternCopyList = new List<List<List<int>>>();
-            for (int i = 0; i < PatternList.Length; i++)
-            {
-                PatternCopyList.Add(new List<List<int>>());
-                for (int X = 0; X < Xmax; X++)
-                {
-                    //やっぱ1づつ
-                }
-            }
-            return null;
-        }
+
         public static void PatternCount(List<List<int>> Ques, List<List<List<int>>> PatternList)
         {
             ZeroIndexList = new List<List<List<int>>>();
@@ -543,7 +633,7 @@ namespace _2024ProconTemporary
                 {
                     ZeroIndexList[i].Add(new List<int>());
                     OneIndexList[i].Add(new List<int>());
-                    for (int X = 0; X < Pattern.PatternList[i][Y].Count; X++)
+                    for (int X = 0; X < PatternList[i][Y].Count; X++)
                     {
                         if (Pattern.PatternList[i][Y][X] == 0)
                         {
@@ -566,9 +656,9 @@ namespace _2024ProconTemporary
                     }
 
                 }
-                if (Pattern.PatternList[i].Count >= Ques.Count)
+                if (PatternList[i].Count >= Ques.Count)
                 {
-                    if (Pattern.PatternList[i][0].Count >= Ques[0].Count)
+                    if (PatternList[i][0].Count >= Ques[0].Count)
                     {
                         PatternSizeListOver.Add(i);
                         continue;
