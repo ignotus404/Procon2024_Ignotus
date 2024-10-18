@@ -9,8 +9,8 @@ namespace _2024ProconTemporary
 {
     public class Practice
     {
-        public static int pieceX = 32;
-        public static int pieceY = 1;
+        public static int pieceX;
+        public static int pieceY;
         static Random random = new Random();
         public static List<List<int>> answer = new List<List<int>>();
         public static List<List<int>> queues = new List<List<int>>();
@@ -95,9 +95,12 @@ namespace _2024ProconTemporary
         };
         public static void Practices()
         {
+            pieceX = 32;
+            pieceY = 1;
             Question();
             Answer(AnsTes);
         }
+       
 
         public static void Question()
         {
