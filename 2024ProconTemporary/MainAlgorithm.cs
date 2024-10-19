@@ -1,4 +1,4 @@
-﻿using _2024ProconTemporary.Com;
+using _2024ProconTemporary.Com;
 using _2024ProconTemporary.ReadableData;
 using Sprache;
 using System;
@@ -78,11 +78,10 @@ namespace _2024ProconTemporary
                 PatternList[p.P] = Case.Copy(p.Cells.ToList());
             }
             PatternCount(queses, PatternList);
-            Hyoji(OneIndexList[255]);
-            PatternDifferenceValue(PatternList);
             for (int direction = 0; direction < 4; direction++)
             {
-                //MaxN = 0;
+                N = 0;
+                Ops = new List<AnswerData.OperationData>();
                 if (direction == 0 || direction == 1)
                 {
                     dieCutting = Case.DieCuttingUP;
@@ -91,10 +90,11 @@ namespace _2024ProconTemporary
                 {
                     dieCutting = Case.DieCuttingDown;
                 }
-                var Items = FirstSort(queses, answer, dieCutting, Ops, PatternList, WantListX, WantListY, WantListXS);
-                queses = Items.Item1;
-                N = Items.Item2;
-                Ops = Items.Item3;
+                //var Items = FirstSort(queses, answer, dieCutting, Ops, PatternList,WantListX,WantListY,WantListXS);
+                //var Items = FirstSortTest(queses, answer, dieCutting, Ops, PatternList,WantListX,WantListY,WantListXS);
+                //queses = Items.Item1;
+                //N = Items.Item2;
+                //Ops = Items.Item3;
                 if (direction == 0 || direction == 3)
                 {
                     dieCutting = Case.DieCuttingLeft;
@@ -103,12 +103,15 @@ namespace _2024ProconTemporary
                 {
                     dieCutting = Case.DieCuttingRight;
                 }
-                for (int B = 0; B < 100; B++)
+                for (int B = 0; B < 10; B++)
                 {
                     IndexCount(queses, Xmax, Ymax);
-                    var Items2 = SearchDie(queses, answer, false, PatternList);
-                    queses = Items.Item1;
-                    var S = SCheck(Items.Item2);
+                    var Items2 = SearchDie(queses, answer, true, PatternList);
+                    var Items3 = SearchDie(queses, answer, true, PatternList);
+                    //if(Items2)
+                    //queses = Items.Item1;
+                    var S = SCheck(Items2.Item2);
+                    var Direction = SCheck2(Items2.Item2);
                     var operationData = new AnswerData.OperationData
                     {
                         P = Items2.Item1,
@@ -118,10 +121,12 @@ namespace _2024ProconTemporary
                     };
                     Ops.Add(operationData);
                     N++;
-                    queses = dieCutting(queses, PatternList[Items2.Item1], Items2.Item3, Items2.Item4, 0, 0);
+                    queses = Direction(queses, PatternList[Items2.Item1], Items2.Item3, Items2.Item4, 0, 0);
+
+                    Hyoji(queses);
+                    Console.WriteLine("");
                 }
                 Console.WriteLine("");
-                Hyoji(queses);
                 //Match = Check(queses, answer, Xmax, Ymax);
                 if (MaxN > N)
                 {
@@ -129,6 +134,8 @@ namespace _2024ProconTemporary
                     MaxOps = Ops;
                 }
             }
+            Console.WriteLine(Ops.Count);
+            Console.WriteLine(N);
             return (new AnswerData
             {
                 N = MaxN,
@@ -164,7 +171,8 @@ namespace _2024ProconTemporary
                 {
                     dieCutting = Case.DieCuttingDown;
                 }
-                var Items = FirstSort(queses, answer, dieCutting, Ops, Pattern.PatternList, WantListX, WantListY, WantListXS);
+                //var Items = FirstSort(queses, answer, dieCutting, Ops, Pattern.PatternList,WantListX,WantListY,WantListXS);
+                var Items = FirstSortTest(queses, answer, dieCutting, Ops, Pattern.PatternList, WantListX, WantListY, WantListXS);
                 queses = Items.Item1;
                 N = Items.Item2;
                 if (direction == 0 || direction == 3)
@@ -191,18 +199,20 @@ namespace _2024ProconTemporary
         }
         static (List<List<int>>, int, List<AnswerData.OperationData>) FirstSort(List<List<int>> queses, List<List<int>> answer, DieCutting dieCutting, List<AnswerData.OperationData> Ops, List<List<List<int>>> PatternList, int[][] WantListX, int[][] WantListY, int[][] WantListXS)
         {
+            Ops = new List<AnswerData.OperationData>();
             int N = 0;
             var answerT = QuestionShunting(queses, answer, Xmax, Ymax, WantListX, WantListY, WantListXS);
             answerT = Case.TranslatePos(answerT);
             var quesesT = Case.TranslatePos(queses);
-            Hyoji(quesesT);
-            Hyoji(answerT);
-            for (int B = 0; B < 100; B++)
+            for (int B = 0; B < 10; B++)
             {
                 IndexCount(quesesT, Ymax, Xmax);
                 var Items = SearchDie(quesesT, answerT, true, PatternList);
                 var S = SCheck(Items.Item2);
+                var direction = SCheck2(Items.Item2);
                 Console.WriteLine(Items.Item1);
+                Console.WriteLine(Items.Item2);
+                Console.WriteLine(Items.Item3);
                 var operationData = new AnswerData.OperationData
                 {
                     P = Items.Item1,
@@ -212,7 +222,33 @@ namespace _2024ProconTemporary
                 };
                 Ops.Add(operationData);
                 N++;
-                quesesT = dieCutting(quesesT, PatternList[Items.Item1], Items.Item3, Items.Item4, 0, 0);
+                quesesT = direction(quesesT, PatternList[Items.Item1], Items.Item3, Items.Item4, 0, 0);
+                Hyoji(quesesT);
+                //Match = Check(quesesT, answerT,Ymax,Xmax);
+            }
+            quesesT = Case.TranslatePos(quesesT);
+            // Match = Check(answer, queses,Xmax,Ymax);
+            return (quesesT, N, Ops);
+
+        }
+        static (List<List<int>>, int, List<AnswerData.OperationData>) FirstSortTest(List<List<int>> queses, List<List<int>> answer, DieCutting dieCutting, List<AnswerData.OperationData> Ops, List<List<List<int>>> PatternList, int[][] WantListX, int[][] WantListY, int[][] WantListXS)
+        {
+            Ops = new List<AnswerData.OperationData>();
+            int N = 0;
+            var answerT = QuestionShunting(queses, answer, Xmax, Ymax, WantListX, WantListY, WantListXS);
+            answerT = Case.TranslatePos(answerT);
+            var quesesT = Case.TranslatePos(queses);
+            Hyoji(quesesT);
+            Hyoji(answerT);
+            for (int B = 0; B < 10; B++)
+            {
+                IndexCount(quesesT, Ymax, Xmax);
+                var Items = MainTest(quesesT, answerT, N, dieCutting, Ops, PatternList, true);
+                var S = SCheck(Items.Item2);
+                Console.WriteLine(Items.Item1);
+                //Ops.Add(operationData);
+                N++;
+                //quesesT = dieCutting(quesesT, PatternList[Items.Item1], Items.Item3, Items.Item4, 0, 0);
                 //Match = Check(quesesT, answerT,Ymax,Xmax);
             }
             quesesT = Case.TranslatePos(quesesT);
@@ -249,18 +285,18 @@ namespace _2024ProconTemporary
             for (int Y = 0; Y < pieceY; Y++)
             {
 
-                WantListXS[Y] = new int[4];
-                for (int number = 0; number < 4; number++)
-                {
-                    var WantCheckS = Ans[Y].Count(item => item == number) - Ques[Y].Count(item => item == number);
+//                 WantListXS[Y] = new int[4];
+//                 for (int number = 0; number < 4; number++)
+//                 {
+//                     var WantCheckS = Ans[Y].Count(item => item == number) - Ques[Y].Count(item => item == number);
 
-                    WantListXS[Y][number] = WantCheckS;
-                    Count += WantListXS[Y].Count(item => item == 0);
-                }
+                //                     WantListXS[Y][number] = WantCheckS;
+                //                     Count += WantListXS[Y].Count(item => item == 0);
+                //                 }
 
-            }
-            return Count;
-        }
+                //             }
+                //             return Count;
+                //         }
 
         public static List<List<int>> QuestionShunting(List<List<int>> Ques, List<List<int>> Ans, int pieceX, int pieceY, int[][] WantListX, int[][] WantListY, int[][] WantListXS)
         {
@@ -317,10 +353,10 @@ namespace _2024ProconTemporary
                     WantListY[Number][X] = WantCheck;
 
 
-                }
-            }
-            return true;
-        }
+//                 }
+//             }
+//             return true;
+//         }
 
         public static int ListWarp(int X, int Y, int[][] WantListX, int[][] WantListY)
         {
@@ -395,11 +431,10 @@ namespace _2024ProconTemporary
                     NextSearch(queses, answer, WantIndex, WantIndex[0][X].Count + WantIndex[1][X].Count + 1, X, T);
                 }
                 var i = Patterncalculation(queses, answer, WantIndex, T);
-                Console.WriteLine(i[0]);
-                Console.WriteLine(i[1]);
-                Console.WriteLine(i[2]);
                 queses = dieCutting(queses, PatternList[i[0]], i[1], i[2], 0, 0);
                 var S = SCheck(0);
+                Console.WriteLine(999);
+                Console.WriteLine(i[0]);
                 var operationData = new AnswerData.OperationData
                 {
                     P = i[0],
@@ -611,6 +646,26 @@ namespace _2024ProconTemporary
             else
             {
                 return AnswerData.OperationData.Side.Right;
+            }
+        }
+        static DieCutting SCheck2(int num)
+        {
+            if (num == 0)
+            {
+                return Case.DieCuttingUP;
+
+            }
+            else if (num == 1)
+            {
+                return Case.DieCuttingDown;
+            }
+            else if (num == 2)
+            {
+                return Case.DieCuttingLeft;
+            }
+            else
+            {
+                return Case.DieCuttingRight;
             }
         }
         public static void IndexTest(List<List<int>> Ques, List<List<int>> Ans, List<List<List<int>>> WantTypeIndex)
@@ -870,29 +925,29 @@ namespace _2024ProconTemporary
                             OneIndexList[i][Y].Add(X);
                         }
 
-                    }
+                        //                     }
 
-                    if (ZeroIndexList[i][Y].Count == 0)
-                    {
-                        ZeroIndexList[i][Y].Add(0);
-                    }
-                    if (OneIndexList[i][Y].Count == 0)
-                    {
-                        OneIndexList[i][Y].Add(0);
-                    }
+                        if (ZeroIndexList[i][Y].Count == 0)
+                        {
+                            ZeroIndexList[i][Y].Add(0);
+                        }
+                        if (OneIndexList[i][Y].Count == 0)
+                        {
+                            OneIndexList[i][Y].Add(0);
+                        }
 
-                }
-                if (PatternList[i].Count >= Ques.Count)
-                {
-                    if (PatternList[i][0].Count >= Ques[0].Count)
-                    {
-                        PatternSizeListOver.Add(i);
-                        continue;
                     }
+                    if (PatternList[i].Count >= Ques.Count)
+                    {
+                        if (PatternList[i][0].Count >= Ques[0].Count)
+                        {
+                            PatternSizeListOver.Add(i);
+                            continue;
+                        }
+                    }
+                    PatternSizeListNotOver.Add(i);
                 }
-                PatternSizeListNotOver.Add(i);
             }
-        }
         public static void IndexCount(List<List<int>> Ques, int pieceX, int pieceY)
         {
             NumberIndexList = new List<List<List<int>>>();
@@ -1045,70 +1100,170 @@ namespace _2024ProconTemporary
             return (useDieNum, cuttingDirection, usingPositionX, usingPositionY);
 
         }
-
-        static int CalculateEffectiveScore(List<List<int>> beforeCollectPieceArray, List<List<int>> afterCollectPieceArray, bool T)
+        public static (int, int, int, int) SearchDieTest(List<List<int>> ques, List<List<int>> ans, bool T, List<List<List<int>>> PatternList)
         {
-            int effectiveScore = 0;
+            int useDieNum = 0;
+            int cuttingDirection = 0;
+            int usingPositionX = 0;
+            int usingPositionY = 0;
+            int nowMaxEffectiveScore = 0;
+            List<List<int>> collectPieceArray = CreateCollectPieceArray(ques, ans, T);
+
+            // 仕様メモ
+            // 左端、もしくは右端を固定し、一方向にしか動かないようにする
+            // for文を回して、どの型が一番効率的かを計算する
+            // 効率的かどうかは、(揃ったピースの数-揃わなくなったピースの数)で判断する
+            // 効率的なものを見つけたら、使うべき型、使うべき座標を返す
             if (T)
             {
-                for (int y = 0; y < Ymax; y++)
+                for (int useDieIndex = 0; useDieIndex < PatternList.Count; useDieIndex++)
                 {
+                    int DownCuttingEffectiveScore;
+                    int UPCuttingEffectiveScore;
                     for (int x = 0; x < Xmax; x++)
                     {
-                        effectiveScore += (int)beforeCollectPieceArray[x][y] - afterCollectPieceArray[x][y];
+                        for (int y = 0; y < Ymax; y++)
+                        {
+
+                            List<List<int>> tempQues = Case.Copy(ques);
+                            List<List<int>> tempAns = Case.Copy(ans);
+                            List<List<int>> UPCuttingQues = Case.DieCuttingUP(tempQues, PatternList[useDieIndex], x, y, PatternList[useDieIndex][0].Count, PatternList[useDieIndex].Count);
+                            List<List<int>> DownCuttingQues = Case.DieCuttingDown(tempQues, PatternList[useDieIndex], x, y, PatternList[useDieIndex][0].Count, PatternList[useDieIndex].Count);
+
+                            List<List<int>> UPCuttingCollectPieceArray = CreateCollectPieceArray(UPCuttingQues, tempAns, T);
+                            List<List<int>> DownCuttingCollectPieceArray = CreateCollectPieceArray(DownCuttingQues, tempAns, T);
+
+                            DownCuttingEffectiveScore = CalculateEffectiveScore(collectPieceArray, DownCuttingCollectPieceArray, T);
+                            UPCuttingEffectiveScore = CalculateEffectiveScore(collectPieceArray, UPCuttingCollectPieceArray, T);
+
+                            if (MathF.Max(DownCuttingEffectiveScore, UPCuttingEffectiveScore) > nowMaxEffectiveScore)
+                            {
+                                nowMaxEffectiveScore = (int)MathF.Max(DownCuttingEffectiveScore, UPCuttingEffectiveScore);
+                                if (DownCuttingEffectiveScore > UPCuttingEffectiveScore)
+                                {
+                                    cuttingDirection = 1;
+                                }
+                                else
+                                {
+                                    cuttingDirection = 0;
+                                }
+                                useDieNum = useDieIndex;
+                                usingPositionX = x;
+                                usingPositionY = y;
+                            }
+                        }
                     }
                 }
             }
             else
             {
-                for (int y = 0; y < Ymax; y++)
+                for (int useDieIndex = 0; useDieIndex < PatternList.Count; useDieIndex++)
                 {
                     for (int x = 0; x < Xmax; x++)
                     {
-                        effectiveScore += (int)beforeCollectPieceArray[x][y] - afterCollectPieceArray[x][y];
+                        for (int y = 0; y < Ymax; y++)
+                        {
+                            int rightCuttingEffectiveScore;
+                            int leftCuttingEffectiveScore;
+                            List<List<int>> tempQues = Case.Copy(ques);
+                            List<List<int>> tempAns = Case.Copy(ans);
+                            List<List<int>> leftCuttingQues = Case.DieCuttingLeft(tempQues, PatternList[useDieIndex], x, y, PatternList[useDieIndex][0].Count, PatternList[useDieIndex].Count);
+                            List<List<int>> rightCuttingQues = Case.DieCuttingRight(tempQues, PatternList[useDieIndex], x, y, PatternList[useDieIndex][0].Count, PatternList[useDieIndex].Count);
+
+                            List<List<int>> leftCuttingCollectPieceArray = CreateCollectPieceArray(leftCuttingQues, tempAns, T);
+                            List<List<int>> rightCuttingCollectPieceArray = CreateCollectPieceArray(rightCuttingQues, tempAns, T);
+
+                            rightCuttingEffectiveScore = CalculateEffectiveScore(collectPieceArray, rightCuttingCollectPieceArray, T);
+                            leftCuttingEffectiveScore = CalculateEffectiveScore(collectPieceArray, leftCuttingCollectPieceArray, T);
+
+                            if (MathF.Max(rightCuttingEffectiveScore, leftCuttingEffectiveScore) > nowMaxEffectiveScore)
+                            {
+                                nowMaxEffectiveScore = (int)MathF.Max(rightCuttingEffectiveScore, leftCuttingEffectiveScore);
+                                if (rightCuttingEffectiveScore > leftCuttingEffectiveScore)
+                                {
+                                    cuttingDirection = 3;
+                                }
+                                else
+                                {
+                                    cuttingDirection = 2;
+                                }
+                                useDieNum = useDieIndex;
+                                usingPositionX = x;
+                                usingPositionY = y;
+                            }
+                        }
                     }
                 }
             }
 
 
-            return effectiveScore;
-        }
+            //             return (useDieNum, cuttingDirection, usingPositionX, usingPositionY);
 
-        static List<List<int>> CreateCollectPieceArray(List<List<int>> ques, List<List<int>> ans, bool T)
-        {
-            if (T)
+            //         }
+
+            static int CalculateEffectiveScore(List<List<int>> beforeCollectPieceArray, List<List<int>> afterCollectPieceArray, bool T)
             {
-                List<List<int>> collectPieceArray = new List<List<int>>();
-                for (int x = 0; x < Xmax; x++)
+                int effectiveScore = 0;
+                if (T)
                 {
-                    List<int> collectPieceRaw = new List<int>();
                     for (int y = 0; y < Ymax; y++)
                     {
-                        if (ques[x][y] == ans[x][y]) collectPieceRaw.Add(1);
-                        else collectPieceRaw.Add(0);
+                        for (int x = 0; x < Xmax; x++)
+                        {
+                            effectiveScore += (int)beforeCollectPieceArray[x][y] - afterCollectPieceArray[x][y];
+                        }
                     }
-                    collectPieceArray.Add(collectPieceRaw);
                 }
-                return collectPieceArray;
+                else
+                {
+                    for (int y = 0; y < Ymax; y++)
+                    {
+                        for (int x = 0; x < Xmax; x++)
+                        {
+                            effectiveScore += (int)beforeCollectPieceArray[x][y] - afterCollectPieceArray[x][y];
+                        }
+                    }
+                }
+
+
+                return effectiveScore;
             }
-            else
+
+            static List<List<int>> CreateCollectPieceArray(List<List<int>> ques, List<List<int>> ans, bool T)
             {
-                List<List<int>> collectPieceArray = new List<List<int>>();
-                for (int x = 0; x < Xmax; x++)
+                if (T)
                 {
-                    List<int> collectPieceRaw = new List<int>();
-                    for (int y = 0; y < Ymax; y++)
+                    List<List<int>> collectPieceArray = new List<List<int>>();
+                    for (int x = 0; x < Xmax; x++)
                     {
-                        if (ques[y][x] == ans[y][x]) collectPieceRaw.Add(1);
-                        else collectPieceRaw.Add(0);
+                        List<int> collectPieceRaw = new List<int>();
+                        for (int y = 0; y < Ymax; y++)
+                        {
+                            if (ques[x][y] == ans[x][y]) collectPieceRaw.Add(1);
+                            else collectPieceRaw.Add(0);
+                        }
+                        collectPieceArray.Add(collectPieceRaw);
                     }
-                    collectPieceArray.Add(collectPieceRaw);
+                    return collectPieceArray;
                 }
-                return collectPieceArray;
+                else
+                {
+                    List<List<int>> collectPieceArray = new List<List<int>>();
+                    for (int x = 0; x < Xmax; x++)
+                    {
+                        List<int> collectPieceRaw = new List<int>();
+                        for (int y = 0; y < Ymax; y++)
+                        {
+                            if (ques[y][x] == ans[y][x]) collectPieceRaw.Add(1);
+                            else collectPieceRaw.Add(0);
+                        }
+                        collectPieceArray.Add(collectPieceRaw);
+                    }
+                    return collectPieceArray;
+                }
+
             }
 
         }
 
     }
-
-}
