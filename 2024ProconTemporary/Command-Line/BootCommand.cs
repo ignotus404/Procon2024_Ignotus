@@ -64,12 +64,12 @@ namespace _2024ProconTemporary.CommandLine.Commands
                 // ここで問題データをMainAlgorithmに渡して、回答を計算する(引数はReadableProblemData型)
                 var _mainalgorithm = new Mainalgorithm();
                 List<List<int>> answerBoard = new List<List<int>>();
-                // (answerData, answerBoard) = _mainalgorithm.Calculation(problemData);
+                (answerData, answerBoard) = _mainalgorithm.Calculation(problemData);
 
                 Console.WriteLine("Done!");
 
                 // 回答結果を表示する(間違っている場所、かかった手数など) 未実装
-                // CompareAnswers(convertedProblemData, answerData, answerBoard);
+                CompareAnswers(convertedProblemData, answerData, answerBoard);
 
                 //　デバッグ用
                 Console.WriteLine($"answerData: {answerData.N}");
