@@ -16,7 +16,7 @@ namespace _2024ProconTemporary
             double j;
             int k = 1;
             Random Random = new Random();
-            for (i = 0; i < 256; i++)
+            for (i = 0; i < 255; i++)
             {
                 PatternList.Add(new List<List<int>>());
                 int Warp = Random.Next(0, 257);
@@ -31,19 +31,27 @@ namespace _2024ProconTemporary
                 }
             }
             PatternList.Add(new List<List<int>>());
+            PatternList[255] = new List<List<int>>()
+            {
+                new List<int>{1,1,1,0,0,0,1,1,0,1,0,1,1},
+                new List<int>{1,0,1,0,0,0,1,1,0,1,0,1,1},
+                new List<int>{1,0,1,1,0,0,1,1,0,1,0,1,1},
+            };
+            PatternList.Add(new List<List<int>>());
             PatternList[256].Add(new List<int>());
             PatternList[256][0].Add(1);
-
-            Console.WriteLine(PatternList.Count);
+            int a = 0;
             for (i = 1, j = 2; j <= 256; i++, j = Math.Pow(2, i))
             {
                 for (int l = 1; k <= 3 * i; k++, l++)
                 {
                     PatternList.Add(new List<List<int>>());
                     PatternList[k + 256] = PatternAssignment(PatternList[k + 256], l, i, i);
+
                 }
+                a++;
             }
-            Console.WriteLine(PatternList.Count);
+            Console.WriteLine(a);
 
         }
 
