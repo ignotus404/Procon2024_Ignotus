@@ -8,8 +8,8 @@ using System.Security.Cryptography.X509Certificates;
 class BootProgram
 {
 
-    // static void Main(string[] args)
-    // {
-    //     Cli.Execute<CommandClient>(args);
-    // }
+    static void Main(string[] args)
+    {
+        Cli.Execute<CommandClient>(args);
+    }
 }
