@@ -50,22 +50,6 @@ namespace _2024ProconTemporary.CommandLine.Commands
             // 手動操作モード用の抜き型を列挙したリストを作成
             List<ReadablePatternData> dieList = CreateDieList(convertedProblemData);
 
-            // デバッグ用
-            Console.WriteLine("DieList:");
-            foreach (var die in dieList)
-            {
-                Console.WriteLine($"P: {die.P}");
-                Console.WriteLine($"Width: {die.Width}");
-                Console.WriteLine($"Height: {die.Height}");
-                Console.WriteLine("Cells:");
-                foreach (var cell in die.Cells)
-                {
-                    Console.WriteLine(string.Join(" ", cell));
-                }
-            }
-            // ここまで
-
-
             // 手動で回答を作成するモードに移行する
             if (args.isManual)
             {
@@ -79,12 +63,21 @@ namespace _2024ProconTemporary.CommandLine.Commands
                 Console.WriteLine("回答を計算しています...");
                 // ここで問題データをMainAlgorithmに渡して、回答を計算する(引数はReadableProblemData型)
                 var _mainalgorithm = new Mainalgorithm();
-                _mainalgorithm.Calculation(problemData);
+                List<List<int>> answerBoard = new List<List<int>>();
+                // (answerData, answerBoard) = _mainalgorithm.Calculation(problemData);
 
                 Console.WriteLine("Done!");
 
                 // 回答結果を表示する(間違っている場所、かかった手数など) 未実装
-                // CompareAnswers(convertedProblemData, );
+                // CompareAnswers(convertedProblemData, answerData, answerBoard);
+
+                //　デバッグ用
+                Console.WriteLine($"answerData: {answerData.N}");
+                foreach (var answer in answerData.Ops)
+                {
+                    Console.WriteLine($"p:{answer.P}, x:{answer.X}, y:{answer.Y}, s:{answer.S}");
+                }
+                //ここまで
 
 
 
@@ -383,7 +376,7 @@ namespace _2024ProconTemporary.CommandLine.Commands
                 Console.WriteLine();
             }
 
-            Console.WriteLine($"一致率: {collectPieceNum / (problemData.Board.Width * problemData.Board.Height) * 100}%");
+            Console.WriteLine($"一致率: {(float)collectPieceNum / (float)(problemData.Board.Width * problemData.Board.Height) * 100}%");
             Console.WriteLine($"一致ピース数: {collectPieceNum}");
             Console.WriteLine($"かかった手数: {answerData.N}");
         }
