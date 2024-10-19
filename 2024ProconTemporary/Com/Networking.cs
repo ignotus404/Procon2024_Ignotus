@@ -7,20 +7,27 @@ namespace _2024ProconTemporary.Com;
 
 public static class Networking
 {
+    private static readonly string ENV_PATH = @"./.env";
     private static readonly string ServerIp = Env.GetString("SERVER_IP", "127.0.0.1");
 
-    private static readonly string ServerPort = Env.GetString("SERVER_PORT", "80");
+    private static readonly string ServerPort = Env.GetString("SERVER_PORT", "3000");
 
     private static readonly string Token = Env.GetString("PROCON_TOKEN");
 
-    private static readonly string AnswerEndPoint = $"http://{ServerIp}:{ServerPort}/answer";
-    private static readonly string ProblemEndPoint = $"http://{ServerIp}:{ServerPort}/problem";
+    private static readonly string AnswerEndPoint;
+    private static readonly string ProblemEndPoint;
 
     static Networking()
     {
-        Env.Load();
-        ServerIp = Env.GetString("SERVER_IP", "127.0.0.1:3000");
-        Token = Env.GetString("PROCON_TOKEN");
+        Env.Load(ENV_PATH);
+        ServerIp = Env.GetString("SERVER_IP", "127.0.0.1");
+        ServerPort = Env.GetString("SERVER_PORT", "3000");
+        Token = Env.GetString("PROCON_TOKEN", "natori4d166dbccdd7a5a875f1246f18bf46c1f9d85d9c6e2d8f1f05c82f85da");
+        AnswerEndPoint = $"http://{ServerIp}:{ServerPort}/answer";
+        ProblemEndPoint = $"http://{ServerIp}:{ServerPort}/problem";
+        Console.WriteLine($"Server IP: {ServerIp}");
+        Console.WriteLine($"Server Port: {ServerPort}");
+        Console.WriteLine($"Token: {Token}");
     }
 
 
@@ -67,12 +74,21 @@ public static class Networking
         AddTokenHeader(ref req);
         using var jsonStream = new MemoryStream();
         await JsonSerializer.SerializeAsync(jsonStream, answer);
-        var json = jsonStream.ToString()!;
+        jsonStream.Position = 0;
+        using var reader = new StreamReader(jsonStream);
+        var json = await reader.ReadToEndAsync();
         req.Content = new StringContent(json, Encoding.UTF8, "application/json");
         try
         {
             var res = await client.SendAsync(req);
-            if (res.StatusCode.Equals(HttpStatusCode.OK)) return true;
+            if (res.StatusCode.Equals(HttpStatusCode.OK))
+            {
+                // デバッグ用
+                var body = await res.Content.ReadAsStringAsync();
+                Console.WriteLine(body);
+                // ここまで
+                return true;
+            }
             await Console.Error.WriteLineAsync($"Failed to send answer data. Status Code is {res.StatusCode}");
             return false;
         }

@@ -249,18 +249,18 @@ namespace _2024ProconTemporary
             for (int Y = 0; Y < pieceY; Y++)
             {
 
-                WantListXS[Y] = new int[4];
-                for (int number = 0; number < 4; number++)
-                {
-                    var WantCheckS = Ans[Y].Count(item => item == number) - Ques[Y].Count(item => item == number);
+//                 WantListXS[Y] = new int[4];
+//                 for (int number = 0; number < 4; number++)
+//                 {
+//                     var WantCheckS = Ans[Y].Count(item => item == number) - Ques[Y].Count(item => item == number);
 
-                    WantListXS[Y][number] = WantCheckS;
-                    Count += WantListXS[Y].Count(item => item == 0);
-                }
+                //                     WantListXS[Y][number] = WantCheckS;
+                //                     Count += WantListXS[Y].Count(item => item == 0);
+                //                 }
 
-            }
-            return Count;
-        }
+                //             }
+                //             return Count;
+                //         }
 
         public static List<List<int>> QuestionShunting(List<List<int>> Ques, List<List<int>> Ans, int pieceX, int pieceY, int[][] WantListX, int[][] WantListY, int[][] WantListXS)
         {
@@ -317,10 +317,10 @@ namespace _2024ProconTemporary
                     WantListY[Number][X] = WantCheck;
 
 
-                }
-            }
-            return true;
-        }
+//                 }
+//             }
+//             return true;
+//         }
 
         public static int ListWarp(int X, int Y, int[][] WantListX, int[][] WantListY)
         {
@@ -870,29 +870,29 @@ namespace _2024ProconTemporary
                             OneIndexList[i][Y].Add(X);
                         }
 
-                    }
+                        //                     }
 
-                    if (ZeroIndexList[i][Y].Count == 0)
-                    {
-                        ZeroIndexList[i][Y].Add(0);
-                    }
-                    if (OneIndexList[i][Y].Count == 0)
-                    {
-                        OneIndexList[i][Y].Add(0);
-                    }
+                        if (ZeroIndexList[i][Y].Count == 0)
+                        {
+                            ZeroIndexList[i][Y].Add(0);
+                        }
+                        if (OneIndexList[i][Y].Count == 0)
+                        {
+                            OneIndexList[i][Y].Add(0);
+                        }
 
-                }
-                if (PatternList[i].Count >= Ques.Count)
-                {
-                    if (PatternList[i][0].Count >= Ques[0].Count)
-                    {
-                        PatternSizeListOver.Add(i);
-                        continue;
                     }
+                    if (PatternList[i].Count >= Ques.Count)
+                    {
+                        if (PatternList[i][0].Count >= Ques[0].Count)
+                        {
+                            PatternSizeListOver.Add(i);
+                            continue;
+                        }
+                    }
+                    PatternSizeListNotOver.Add(i);
                 }
-                PatternSizeListNotOver.Add(i);
             }
-        }
         public static void IndexCount(List<List<int>> Ques, int pieceX, int pieceY)
         {
             NumberIndexList = new List<List<List<int>>>();
@@ -1042,73 +1042,73 @@ namespace _2024ProconTemporary
             }
 
 
-            return (useDieNum, cuttingDirection, usingPositionX, usingPositionY);
+            //             return (useDieNum, cuttingDirection, usingPositionX, usingPositionY);
 
-        }
+            //         }
 
-        static int CalculateEffectiveScore(List<List<int>> beforeCollectPieceArray, List<List<int>> afterCollectPieceArray, bool T)
-        {
-            int effectiveScore = 0;
-            if (T)
+            static int CalculateEffectiveScore(List<List<int>> beforeCollectPieceArray, List<List<int>> afterCollectPieceArray, bool T)
             {
-                for (int y = 0; y < Ymax; y++)
+                int effectiveScore = 0;
+                if (T)
                 {
-                    for (int x = 0; x < Xmax; x++)
-                    {
-                        effectiveScore += (int)beforeCollectPieceArray[x][y] - afterCollectPieceArray[x][y];
-                    }
-                }
-            }
-            else
-            {
-                for (int y = 0; y < Ymax; y++)
-                {
-                    for (int x = 0; x < Xmax; x++)
-                    {
-                        effectiveScore += (int)beforeCollectPieceArray[x][y] - afterCollectPieceArray[x][y];
-                    }
-                }
-            }
-
-
-            return effectiveScore;
-        }
-
-        static List<List<int>> CreateCollectPieceArray(List<List<int>> ques, List<List<int>> ans, bool T)
-        {
-            if (T)
-            {
-                List<List<int>> collectPieceArray = new List<List<int>>();
-                for (int x = 0; x < Xmax; x++)
-                {
-                    List<int> collectPieceRaw = new List<int>();
                     for (int y = 0; y < Ymax; y++)
                     {
-                        if (ques[x][y] == ans[x][y]) collectPieceRaw.Add(1);
-                        else collectPieceRaw.Add(0);
+                        for (int x = 0; x < Xmax; x++)
+                        {
+                            effectiveScore += (int)beforeCollectPieceArray[x][y] - afterCollectPieceArray[x][y];
+                        }
                     }
-                    collectPieceArray.Add(collectPieceRaw);
                 }
-                return collectPieceArray;
-            }
-            else
-            {
-                List<List<int>> collectPieceArray = new List<List<int>>();
-                for (int x = 0; x < Xmax; x++)
+                else
                 {
-                    List<int> collectPieceRaw = new List<int>();
                     for (int y = 0; y < Ymax; y++)
                     {
-                        if (ques[y][x] == ans[y][x]) collectPieceRaw.Add(1);
-                        else collectPieceRaw.Add(0);
+                        for (int x = 0; x < Xmax; x++)
+                        {
+                            effectiveScore += (int)beforeCollectPieceArray[x][y] - afterCollectPieceArray[x][y];
+                        }
                     }
-                    collectPieceArray.Add(collectPieceRaw);
                 }
-                return collectPieceArray;
+
+
+                return effectiveScore;
+            }
+
+            static List<List<int>> CreateCollectPieceArray(List<List<int>> ques, List<List<int>> ans, bool T)
+            {
+                if (T)
+                {
+                    List<List<int>> collectPieceArray = new List<List<int>>();
+                    for (int x = 0; x < Xmax; x++)
+                    {
+                        List<int> collectPieceRaw = new List<int>();
+                        for (int y = 0; y < Ymax; y++)
+                        {
+                            if (ques[x][y] == ans[x][y]) collectPieceRaw.Add(1);
+                            else collectPieceRaw.Add(0);
+                        }
+                        collectPieceArray.Add(collectPieceRaw);
+                    }
+                    return collectPieceArray;
+                }
+                else
+                {
+                    List<List<int>> collectPieceArray = new List<List<int>>();
+                    for (int x = 0; x < Xmax; x++)
+                    {
+                        List<int> collectPieceRaw = new List<int>();
+                        for (int y = 0; y < Ymax; y++)
+                        {
+                            if (ques[y][x] == ans[y][x]) collectPieceRaw.Add(1);
+                            else collectPieceRaw.Add(0);
+                        }
+                        collectPieceArray.Add(collectPieceRaw);
+                    }
+                    return collectPieceArray;
+                }
+
             }
 
         }
 
     }
-
-}
