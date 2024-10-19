@@ -78,11 +78,12 @@ namespace _2024ProconTemporary
                 PatternList[p.P] = Case.Copy(p.Cells.ToList());
             }
             PatternCount(queses, PatternList);
-            Hyoji(OneIndexList[255]);
             PatternDifferenceValue(PatternList);
+            Console.WriteLine(OneIndexList[25]);
             for (int direction = 0; direction < 4; direction++)
             {
-                //MaxN = 0;
+                N = 0;
+                Ops = new List<AnswerData.OperationData>();
                 if (direction == 0 || direction == 1)
                 {
                     dieCutting = Case.DieCuttingUP;
@@ -95,6 +96,7 @@ namespace _2024ProconTemporary
                 queses = Items.Item1;
                 N = Items.Item2;
                 Ops = Items.Item3;
+                Console.WriteLine(Ops.Count);
                 if (direction == 0 || direction == 3)
                 {
                     dieCutting = Case.DieCuttingLeft;
@@ -103,7 +105,7 @@ namespace _2024ProconTemporary
                 {
                     dieCutting = Case.DieCuttingRight;
                 }
-                for (int B = 0; B < 100; B++)
+                for (int B = 0; B < 10; B++)
                 {
                     IndexCount(queses, Xmax, Ymax);
                     var Items2 = SearchDie(queses, answer, false, PatternList);
@@ -129,6 +131,8 @@ namespace _2024ProconTemporary
                     MaxOps = Ops;
                 }
             }
+            Console.WriteLine(Ops.Count);
+            Console.WriteLine(N);
             return (new AnswerData
             {
                 N = MaxN,
@@ -191,13 +195,14 @@ namespace _2024ProconTemporary
         }
         static (List<List<int>>, int, List<AnswerData.OperationData>) FirstSort(List<List<int>> queses, List<List<int>> answer, DieCutting dieCutting, List<AnswerData.OperationData> Ops, List<List<List<int>>> PatternList, int[][] WantListX, int[][] WantListY, int[][] WantListXS)
         {
+            Ops = new List<AnswerData.OperationData>();
             int N = 0;
             var answerT = QuestionShunting(queses, answer, Xmax, Ymax, WantListX, WantListY, WantListXS);
             answerT = Case.TranslatePos(answerT);
             var quesesT = Case.TranslatePos(queses);
             Hyoji(quesesT);
             Hyoji(answerT);
-            for (int B = 0; B < 100; B++)
+            for (int B = 0; B < 10; B++)
             {
                 IndexCount(quesesT, Ymax, Xmax);
                 var Items = SearchDie(quesesT, answerT, true, PatternList);
