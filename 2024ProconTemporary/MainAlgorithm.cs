@@ -78,6 +78,7 @@ namespace _2024ProconTemporary
                 PatternList[p.P] = Case.Copy(p.Cells.ToList());
             }
             PatternCount(queses, PatternList);
+            Hyoji(OneIndexList[255]);
             PatternDifferenceValue(PatternList);
             for (int direction = 0; direction < 4; direction++)
             {
